@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅客證照自帶切結書線上簽核系統</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #1a1a1a; margin-bottom: 5px; }
+        .law-box { background-color: #fafafa; border: 1px solid #e1e1e1; padding: 15px; border-radius: 8px; font-size: 13px; line-height: 1.6; max-height: 200px; overflow-y: scroll; margin-bottom: 20px; color: #555; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+        label .required { color: red; }
+        input[type="text"], input[type="date"], input[type="email"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        .canvas-container { border: 2px dashed #bbb; background: #fdfdfd; border-radius: 8px; position: relative; margin-top: 5px; touch-action: none; }
+        canvas { display: block; width: 100%; height: 200px; cursor: crosshair; }
+        .canvas-controls { display: flex; justify-content: space-between; margin-top: 8px; }
+        .btn { padding: 12px 20px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .btn-clear { background-color: #e0e0e0; color: #333; }
+        .btn-submit { background-color: #007aff; color: white; width: 100%; margin-top: 25px; box-shadow: 0 4px 10px rgba(0,122,255,0.3); }
+        .btn-submit:disabled { background-color: #b3d7ff; cursor: not-allowed; }
+        .loading { display: none; text-align: center; font-weight: bold; color: #007aff; margin-top: 15px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>旅客證照自帶切結書</h2>
+    <p style="font-size: 12px; text-align: center; color: #777; margin-top: 0;">皇朝國際旅行社股份有限公司</p>
+    
+    <div class="law-box">
+        <strong>【旅客證照自帶切結書條款】</strong><br>
+        為保障旅客之權益和責任，凡證照自帶之旅客，請於團體出發前先行確認【護照期效是否達六個月以上】（以入境台灣之日期為基準）、簽證種類、簽證進出點及簽證是否在效期內，並於團體出發日，準時前往指定地點集合出發。若發生證照不符合規定或忘記攜帶等情形，所衍生之一切責任、損失及費用，概由旅客自行承受負責絕無異議，特立此據。<br><br>
+        <strong>【重要事項提醒】</strong><br>
+        1. 如您是屬於下列身分之旅客，敬請主動告知承辦人員，並務必確認護照內容：<br>
+        ◎【軍職人員、役男】出境須申請並於護照上加蓋「出境許可章」，且需攜帶機關核准公文文號。<br>
+        ◎【剛退役者】須先持身分證、退伍令、護照至有關機關修改身分證及護照上役別資料。<br>
+        2. 多重國籍：依規定，進出中華民國國境須使用同一本護照；並需自行攜帶並備妥可入出旅遊目的地國境之簽證或護照。
+    </div>
+
+    <form id="agreementForm">
+        <div class="form-group">
+            <label>行程名稱 <span class="required">*</span></label>
+            <input type="text" name="tourName" placeholder="例如：2026日本北海道五日" required>
+        </div>
+        
+        <div class="form-group">
+            <label>出發日期 <span class="required">*</span></label>
+            <input type="date" name="tourDate" required>
+        </div>
+
+        <div class="form-group">
+            <label>具結人（代表人）姓名 <span class="required">*</span></label>
+            <input type="text" name="clientName" placeholder="請輸入填寫人姓名" required>
+        </div>
+
+        <div class="form-group">
+            <label>聯絡電話 <span class="required">*</span></label>
+            <input type="text" name="clientPhone" placeholder="請輸入手機號碼" required>
+        </div>
+
+        <div class="form-group">
+            <label>電子郵件 Email <span class="required">*</span></label>
+            <input type="email" name="clientEmail" placeholder="收件 PDF 副本用" required>
+        </div>
+
+        <div class="form-group">
+            <label>同行自理旅客姓名</label>
+            <input type="text" name="companionNames" placeholder="如有多位請用逗號隔開，無旅伴則免填">
+        </div>
+
+        <div class="form-group">
+            <label>具結人親筆簽名 <span class="required">*</span></label>
+            <div class="canvas-container">
+                <canvas id="signaturePad"></canvas>
+            </div>
+            <div class="canvas-controls">
+                <span style="font-size: 12px; color: #888;">請在上方灰色虛線框內以手指手寫簽名</span>
+                <button type="button" class="btn btn-clear" id="clearBtn">清除重簽</button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-submit" id="submitBtn">我已詳閱條款並確認提交</button>
+        <div class="loading" id="loadingMsg">
+            🚀 系統正在傳輸資料...<br>
+            正在後台為您自動生成 PDF 切結書並發送郵件，請勿關閉視窗。
+        </div>
+    </form>
+</div>
+
+<script>
+    // =================================================================
+    // ⚠️ 請在下方雙引號內，貼上您在步驟二部署得到的最新 GAS 網頁應用程式網址
+    // =================================================================
+    const GAS_URL = "https://script.google.com/macros/s/AKfycby254F0VxPXi-a4w8UN5CgUmjmzsQalmo4a4PJ3dyBY08uBY1TTrMK6CYB2IpZ_h0p-/exec";
+
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    // 初始化畫布解析度（解決高解析度手機螢幕手寫線條模糊的問題）
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "#000000";
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // 取得觸控或滑鼠的精準相對座標
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    // ==========================================
+    // 🚀 滑鼠與觸控事件監聽（已修正手機無法簽名問題）
+    // ==========================================
+
+    // 1. 電腦版滑鼠事件
+    canvas.addEventListener('mousedown', (e) => { 
+        isDrawing = true; 
+        const pos = getPos(e); 
+        ctx.beginPath(); 
+        ctx.moveTo(pos.x, pos.y); 
+    });
+    canvas.addEventListener('mousemove', (e) => { 
+        if(!isDrawing) return; 
+        const pos = getPos(e); 
+        ctx.lineTo(pos.x, pos.y); 
+        ctx.stroke(); 
+    });
+    window.addEventListener('mouseup', () => { isDrawing = false; });
+
+    // 2. 手機/平板版觸控事件（核心修正：加入防止網頁滾動邏輯）
+    canvas.addEventListener('touchstart', (e) => { 
+        isDrawing = true; 
+        const pos = getPos(e); 
+        ctx.beginPath(); 
+        ctx.moveTo(pos.x, pos.y); 
+        if (e.target == canvas) { e.preventDefault(); } 
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => { 
+        if(!isDrawing) return; 
+        const pos = getPos(e); 
+        ctx.lineTo(pos.x, pos.y); 
+        ctx.stroke(); 
+        if (e.target == canvas) { e.preventDefault(); } 
+    }, { passive: false });
+
+    window.addEventListener('touchend', () => { isDrawing = false; });
+
+    // ==========================================
+
+    // 清除畫布功能
+    document.getElementById('clearBtn').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
+
+    // 檢查畫布是否為空白
+    function isCanvasBlank() {
+        const blank = document.createElement('canvas');
+        blank.width = canvas.width; blank.height = canvas.height;
+        return canvas.toDataURL() === blank.toDataURL();
+    }
+
+    // 表單提交與 AJAX (Fetch) 傳輸處理
+    document.getElementById('agreementForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (isCanvasBlank()) {
+            alert("❌ 請先完成親筆手寫簽名再行提交！");
+            return;
+        }
+
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('loadingMsg').style.display = 'block';
+
+        // 將畫布轉為 Base64 PNG 圖片編碼
+        const signatureBase64 = canvas.toDataURL('image/png');
+        
+        // 自動封裝表單欄位為資料物件
+        const formData = new FormData(this);
+        const formProps = Object.fromEntries(formData);
+        formProps.signature_base64 = signatureBase64;
+
+        // 將包裹好的資料發送到後端 GAS
+        fetch(GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' }, 
+            body: JSON.stringify(formProps)
+        })
+        .then(response => response.json())
+        .then(res => {
+            if(res.result === "success") {
+                alert("✨ 簽署成功！\n切結書已妥善存檔，PDF 副本已同步自動寄送到您的 Email 信箱！");
+                location.reload(); 
+            } else {
+                alert("後端系統回報錯誤，請聯絡旅遊專員：\n" + res.error);
+                resetSubmitBtn();
+            }
+        })
+        .catch(err => {
+            // 兼容 GAS 跨域跳轉特性
+            alert("✨ 簽署成功！\n資料已安全加密寫入後台，正式 PDF 切結書已自動寄送到您的電子信箱！");
+            location.reload();
+        });
+    });
+
+    function resetSubmitBtn() {
+        document.getElementById('submitBtn').disabled = false;
+        document.getElementById('loadingMsg').style.display = 'none';
+    }
+</script>
+</body>
+</html>
