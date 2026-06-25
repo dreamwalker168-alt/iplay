@@ -5,28 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>愛玩旅遊 - 線上數位簽署系統</title>
   <style>
-    /* 🎯 修正一：移除手機版 body 贅餘的邊距，釋放最大寬度空間 */
-    body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f1f5f9; color: #334155; margin: 0; padding: 10px; -webkit-text-size-adjust: 100%; }
-    .selector-container { max-width: 800px; margin: 0 auto 15px auto; background: #ffffff; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; box-sizing: border-box; }
-    h2 { color: #0284c7; text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 20px; }
-    .grid-select { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    @media (max-width: 600px) { 
-      .grid-select { grid-template-columns: 1fr; gap: 12px; } 
-      body { padding: 5px; }
-      .selector-container { border-radius: 8px; padding: 12px; }
+    /* 基礎樣式 */
+    body { 
+      font-family: "Microsoft JhengHei", sans-serif; 
+      background-color: #f1f5f9; 
+      color: #334155; 
+      margin: 0; 
+      padding: 15px; 
+      -webkit-text-size-adjust: 100%; 
     }
-    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #475569; }
-    select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 15px; background-color: #fff; color: #1e293b; cursor: pointer; -webkit-appearance: none; }
-    select:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+    .selector-container { 
+      max-width: 800px; 
+      margin: 0 auto 15px auto; 
+      background: #ffffff; 
+      padding: 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+      border: 1px solid #e2e8f0; 
+      box-sizing: border-box; 
+    }
+    h2 { 
+      color: #0284c7; 
+      text-align: center; 
+      margin-top: 0; 
+      margin-bottom: 15px; 
+      font-size: 20px; 
+    }
+    .grid-select { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 15px; 
+    }
+    label { 
+      display: block; 
+      font-weight: bold; 
+      margin-bottom: 6px; 
+      font-size: 14px; 
+      color: #475569; 
+    }
+    select { 
+      width: 100%; 
+      padding: 12px; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 8px; 
+      box-sizing: border-box; 
+      font-size: 15px; 
+      background-color: #fff; 
+      color: #1e293b; 
+      cursor: pointer; 
+      -webkit-appearance: none; 
+    }
+    select:focus { 
+      outline: none; 
+      border-color: #0284c7; 
+      box-shadow: 0 0 0 3px rgba(2,132,199,0.1); 
+    }
     
-    /* 🎯 修正二：優化內嵌框架容器，寬度全面 100% 撐滿手機螢幕 */
-    #iframeWrapper { max-width: 800px; margin: 0 auto; display: none; border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); background: #ffffff; -webkit-overflow-scrolling: touch; }
-    #targetFormIframe { width: 100%; height: 1400px; border: none; display: block; margin: 0; padding: 0; }
-    @media (max-width: 600px) {
-      #iframeWrapper { border-radius: 8px; }
-      #targetFormIframe { height: 1600px; } /* 手機版文字變長，自動拉高框架避免被切掉 */
+    /* 內嵌框架容器基礎樣式 */
+    #iframeWrapper { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      display: none; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 12px; 
+      overflow: hidden; 
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+      background: #ffffff; 
+      -webkit-overflow-scrolling: touch; 
     }
-    #loadingOverlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; text-align:center; padding-top:200px; font-size:18px; font-weight:bold; color:#0284c7; }
+    /* 桌機版維持原基礎高度 */
+    #targetFormIframe { 
+      width: 100%; 
+      height: 1400px; 
+      border: none; 
+      display: block; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    /* 🎯 終極優化：當偵測到手機版 (螢幕小於 600px) */
+    @media (max-width: 600px) { 
+      body { 
+        padding: 6px 4px !important; /* 釋放網頁最外圈不必要的死白邊 */
+      }
+      .selector-container { 
+        border-radius: 8px; 
+        padding: 14px 10px; /* 微調選單內縮，騰出寬度 */
+      }
+      .grid-select { 
+        grid-template-columns: 1fr; 
+        gap: 12px; 
+      } 
+      
+      /* 🎯 重點：解除子網頁的外殼框限制，使其在手機上徹底貼邊伸展 */
+      #iframeWrapper { 
+        border-radius: 4px; 
+        border-left: none !important;
+        border-right: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+      
+      /* 🎯 重點：因為切結書簽名板調高到了 500px，手機版框架實體高度必須大幅拉高至 2100px，確保內容絕不被切掉、操作到底順暢 */
+      #targetFormIframe { 
+        height: 2100px !important; 
+      } 
+    }
+
+    #loadingOverlay { 
+      display: none; 
+      position: fixed; 
+      top:0; 
+      left:0; 
+      width:100%; 
+      height:100%; 
+      background:rgba(255,255,255,0.9); 
+      z-index:9999; 
+      text-align:center; 
+      padding-top:200px; 
+      font-size:18px; 
+      font-weight:bold; 
+      color:#0284c7; 
+    }
   </style>
 </head>
 <body>
@@ -56,7 +158,6 @@
 </div>
 
 <script>
-  // 🎯 請將下方的網址替換為您發布的最新 GAS 網頁應用程式網址
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
 
   let selectedTourDetails = null;
