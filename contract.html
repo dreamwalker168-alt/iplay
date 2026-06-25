@@ -50,11 +50,39 @@
             display: inline-block;
             text-indent: 0;
         }
+
+        /* 🎯 手機版極致優化：強制把左右內縮全部釋放，並把簽名板變大 */
+        @media (max-width: 600px) {
+            body {
+                padding: 6px !important; /* 縮小網頁最外圈的留白 */
+            }
+            
+            /* 讓大卡片在手機上貼齊左右邊緣，釋放所有可讀寬度 */
+            .main-card {
+                padding: 14px 10px !important;
+                border-radius: 8px !important;
+            }
+
+            /* 縮小內部小區塊的間距 */
+            .bg-slate-50, .bg-sky-50 {
+                padding: 12px 10px !important;
+            }
+
+            /* 合約滾動箱內縮減少，讓條文更寬好閱讀 */
+            .contract-box {
+                padding: 14px 10px !important;
+            }
+
+            /* 🎯 簽名板區塊加大：提高高度到 280px，讓手指超好寫字 */
+            #sig-canvas {
+                height: 280px !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen py-10 px-4">
 
-    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 p-6 md:p-10">
+    <div class="main-card max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 p-6 md:p-10">
         <div class="text-center border-b border-gray-200 pb-6 mb-8">
             <h1 class="text-2xl font-bold text-gray-900 tracking-wide">愛玩旅遊</h1>
             <h2 class="text-xl font-semibold text-sky-600 mt-2">國外旅遊定型化契約書</h2>
@@ -165,7 +193,7 @@
                     <p>乙方已為前項通知者，則按通知到達甲方時，距出發日期時間之長短，依下列規定計算其應賠償甲方之違約金：</p>
                     <p class="no-indent pl-8">一、通知於出發日前第四十一日以前到達者，賠償旅遊費用百分之五。</p>
                     <p class="no-indent pl-8">二、通知於出發日前第三十一日至第四十日以內到達者，賠償旅遊費用百分之十。</p>
-                    <p class="no-indent pl-8">三、通知於出發日前第二十一日至第三十日以內到達者，賠償旅遊費用百分之二十。</p>
+                    <p class="no-indent pl-8">三、通知於出發日前第二十一日至第三十日以內到達者，賠償旅遊費用百分之開十。</p>
                     <p class="no-indent pl-8">四、通知於出發日前第二日至第二十日以內到達者，賠償旅遊費用百分之三十。</p>
                     <p class="no-indent pl-8">五、通知於出發日前一日到達者，賠償旅遊費用百分之五十。</p>
                     <p class="no-indent pl-8">六、通知於出發當日以後到達者，賠償旅遊費用百分之一百。</p>
@@ -326,27 +354,27 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label for="passengerName" class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
                         <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2">
                     </div>
                     <div>
-                        <label for="passengerPhone" class="block text-sm font-medium text-gray-700">聯絡電話 <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700">聯絡電話 <span class="text-red-500">*</span></label>
                         <input type="tel" id="passengerPhone" name="passengerPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="如：0912345678">
                     </div>
                 </div>
 
                 <div>
-                    <label for="passengerAddress" class="block text-sm font-medium text-gray-700">通訊地址 <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700">通訊地址 <span class="text-red-500">*</span></label>
                     <input type="text" id="passengerAddress" name="passengerAddress" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫完整收件地址">
                 </div>
 
                 <div>
-                    <label for="clientEmail" class="block text-sm font-medium text-gray-700">電子信箱 (用於接收完成之 PDF 契約書) <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700">電子信箱 (用於接收完成之 PDF 契約書) <span class="text-red-500">*</span></label>
                     <input type="email" id="clientEmail" name="clientEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="example@gmail.com">
                 </div>
 
                 <div>
-                    <label for="companionNamesText" class="block text-sm font-medium text-gray-700">隨行旅客名單 (選填)</label>
+                    <label class="block text-sm font-medium text-gray-700">隨行旅客名單 (選填)</label>
                     <p class="text-xs text-gray-400 mb-1">本人已取得以下全體隨行旅客之授權代為簽署本契約：</p>
                     <input type="text" id="companionNamesText" name="companionNamesText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫隨行同行人姓名。多位請用中文逗號分開，如：王小明，王大明">
                 </div>
@@ -355,7 +383,7 @@
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">旅客代表人親筆手寫簽名處 <span class="text-red-500">*</span></label>
                 <div class="relative w-full">
-                    <canvas id="sig-canvas" width="600" height="200" class="w-full rounded-lg shadow-inner"></canvas>
+                    <canvas id="sig-canvas" width="700" height="320" class="w-full rounded-lg shadow-inner"></canvas>
                 </div>
                 <div class="flex justify-end space-x-2">
                     <button type="button" id="sig-clearBtn" class="px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded transition">清除重簽</button>
@@ -382,26 +410,21 @@
     </div>
 
     <script>
-        // 在您原本的獨立網頁程式碼中加入這段，它會自動把大廳傳過來的團號團名填進去
-window.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const tId = urlParams.get('tourId') || '';
-  const tName = urlParams.get('tourName') || '';
-  const tDate = urlParams.get('tourDate') || '';
+        // 大廳變數接收邏輯
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tId = urlParams.get('tourId') || '';
+            const tName = urlParams.get('tourName') || '';
+            const tDate = urlParams.get('tourDate') || '';
 
-  // 🎯 自動填入您原本前台對應的唯讀欄位或文字標籤
-  if(document.getElementById('tourId')) { document.getElementById('tourId').value = tId; }
-  if(document.getElementById('tourName')) { document.getElementById('tourName').value = tName; }
-  if(document.getElementById('tourDate')) { document.getElementById('tourDate').value = tDate; }
-  
-  // 如果您原本是用 textContent 顯示在畫面上，也可以這樣填：
-  // document.getElementById('previewTourName').textContent = tName;
-});
+            if(document.getElementById('tourId')) { document.getElementById('tourId').value = tId; }
+            if(document.getElementById('tourName')) { document.getElementById('tourName').value = tName; }
+            if(document.getElementById('tourDate')) { document.getElementById('tourDate').value = tDate; }
+        });
 
-        // 請將此處替換為您部署好的 Google Apps Script 網頁應用程式網址 (Web App URL)
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
 
-        // 1. 初始化頁面：從 URL 解析 tourId 參數並撈取團體基本資料與內文變數
+        // 1. 初始化頁面並撈取團體基本資料
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const tourId = urlParams.get('tourId');
@@ -415,17 +438,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('tourId').value = tourId;
 
-            // 向 GAS 後端 API 發送 GET 請求拿取團體開團資料
             fetch(`${GAS_WEB_APP_URL}?action=getTour&tourId=${tourId}`)
                 .then(response => response.json())
                 .then(data => {
                     if(data.status === "success") {
-                        // 填入頂部快訊資訊
                         document.getElementById('display-tourId').innerText = data.tourId || '--';
                         document.getElementById('display-tourDate').innerText = data.tourDate || '--';
                         document.getElementById('display-tourName').innerText = data.tourName || '--';
                         
-                        // 填入契約書內文動態變數欄位
                         document.getElementById('field-tourName').innerText = data.tourName || '--';
                         document.getElementById('field-tourDestination').innerText = data.tourDestination || '--';
                         document.getElementById('field-tourAssembleTime').innerText = data.tourAssembleTime || '--';
@@ -434,7 +454,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('field-paymentAmount1').innerText = data.paymentAmount1 || '--';
                         document.getElementById('field-minTourPeople').innerText = data.minTourPeople || '--';
                         
-                        // 補安全機制防護，若資料庫無此變數則顯示默認值
                         if(document.getElementById('field-CHANGE_PASSENGER_DAYS')) {
                             document.getElementById('field-CHANGE_PASSENGER_DAYS').innerText = data.CHANGE_PASSENGER_DAYS || '--';
                         }
@@ -442,31 +461,24 @@ window.addEventListener('DOMContentLoaded', () => {
                             document.getElementById('field-COOP_DAYS').innerText = data.COOP_DAYS || '--';
                         }
 
-                        // 🎯 核心修正：處理行程表附件 PDF 網址與強制滿版預覽邏輯
                         const itineraryLink = document.getElementById('itinerary-link');
                         const itineraryText = document.getElementById('itinerary-tourName-text');
 
                         if(data.tourItineraryTable && data.tourItineraryTable.startsWith('http')) {
                             let pdfUrl = data.tourItineraryTable.trim();
-                            
-                            // 防呆優化：如果帶入的是 Google 雲端硬碟標準單檔檢視網址，將其轉為 /preview 滿版乾淨介面
                             if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
                                 pdfUrl = pdfUrl.split('/view')[0] + '/preview';
                             }
-                            
                             itineraryLink.href = pdfUrl;
-                            itineraryLink.target = "_blank"; // 確保恢復另外開啟分頁
+                            itineraryLink.target = "_blank";
                             itineraryLink.className = "inline-flex items-center px-4 py-2 bg-white border border-sky-300 rounded-md shadow-sm text-sm font-medium text-sky-700 hover:bg-sky-100 transition cursor-pointer";
-                            // 修正點：改用 innerText 更新文字，不覆蓋 📄 圖示
                             itineraryText.innerText = `點此線上檢閱：${data.tourName || '本團'} - 官方行程表檔案`;
                         } else if (data.tourItineraryTable && data.tourItineraryTable.trim() !== "") {
-                            // 防呆：如果後端不是填寫網址而是純文字描述
                             itineraryLink.removeAttribute('href');
                             itineraryLink.removeAttribute('target');
                             itineraryLink.className = "inline-flex items-center px-4 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm font-medium text-gray-700 cursor-default";
                             itineraryText.innerText = data.tourItineraryTable;
                         } else {
-                            // 完全沒有資料時
                             itineraryLink.href = "javascript:void(0);";
                             itineraryLink.removeAttribute('target');
                             itineraryLink.className = "inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed";
@@ -523,45 +535,39 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        ['mouseup', 'touchend'].forEach(eventName => {
-            window.addEventListener(eventName, () => { drawing = false; });
+        ['mouseup', 'mouseleave', 'touchend'].forEach(eventName => {
+            canvas.addEventListener(eventName, () => {
+                drawing = false;
+            });
         });
 
         document.getElementById('sig-clearBtn').addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         });
 
-        function isCanvasEmpty(canvasDom) {
-            const buffer = new Uint32Array(ctx.getImageData(0, 0, canvasDom.width, canvasDom.height).data.buffer);
-            return !buffer.some(color => color !== 0);
-        }
-
-        // 恢復提交按鈕正常狀態的輔助函數
-        function resetSubmitButton() {
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = false;
-            submitBtn.innerText = "確認無誤，進行線上契約具結簽署";
-            submitBtn.className = "w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2";
-        }
-
-        // 3. 表單提交處理
-        document.getElementById('sign-form').addEventListener('submit', function(e) {
+        // 3. 表單送出至 Google Apps Script 後端
+        document.getElementById('sign-form').addEventListener('submit', (e) => {
             e.preventDefault();
 
-            if (isCanvasEmpty(canvas)) {
-                alert("請於簽名區簽署旅客代表人的親筆姓名後再提交。");
+            // 檢查畫布是否空白
+            const blank = document.createElement('canvas');
+            blank.width = canvas.width;
+            blank.height = canvas.height;
+            if (canvas.toDataURL() === blank.toDataURL()) {
+                alert("請完成旅客代表人親筆手寫簽名後再行提交。");
                 return;
             }
 
-            const signatureImage = canvas.toDataURL('image/png');
-            const formData = new FormData(this);
-            const payload = Object.fromEntries(formData.entries());
-            payload.signature = signatureImage; 
-
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
-            submitBtn.innerText = "官方定型化契約具結提交中，請勿關閉網頁...";
-            submitBtn.className = "w-full py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed";
+            submitBtn.innerText = "正在傳輸切結資料並由雲端系統自動填發 PDF 中...";
+
+            const signatureDataUrl = canvas.toDataURL('image/png');
+            const formData = new FormData(document.getElementById('sign-form'));
+            
+            const payload = {};
+            formData.forEach((value, key) => { payload[key] = value; });
+            payload['signatureId'] = signatureDataUrl;
 
             fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
@@ -569,19 +575,23 @@ window.addEventListener('DOMContentLoaded', () => {
             })
             .then(res => res.json())
             .then(data => {
-                if(data.status === 'success') {
-                    alert("🎉 契約簽署成功！正式旅遊定型化契約 PDF 憑證已同步寄發至您的電子信箱。");
+                if (data.status === "success") {
+                    alert(`🎉 線上定型化契約簽署具結成功！\n\n系統已自動將完成之 PDF 副本同步寄送至：\n${payload['clientEmail']}\n\n感謝您的填寫。`);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    document.getElementById('sign-form').reset();
                 } else {
-                    alert("提交失敗，原因：" + data.message);
-                    resetSubmitButton();
+                    alert("⚠️ 具結提交失敗：" + data.message);
                 }
             })
             .catch(err => {
-                console.error("提交契約時發生錯誤:", err);
-                alert("⚠️ 連線伺服器失敗，請檢查網路狀態或稍後再試。");
-                resetSubmitButton();
+                console.error(err);
+                alert("⚠️ 網路連線或伺服器處理錯誤，請確認網路流暢度後重新重簽提交。");
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "確認無誤，進行線上契約具結簽署";
             });
         });
     </script>
 </body>
-</html>
+</html></html>
