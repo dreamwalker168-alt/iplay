@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>愛玩旅遊 - 線上數位簽署系統</title>
+  <style>
+    body { font-family: "Microsoft JhengHei", sans-serif; background-color: #f1f5f9; color: #334155; margin: 0; padding: 20px; }
+    .selector-container { max-width: 800px; margin: 0 auto 20px auto; background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+    h2 { color: #0284c7; text-align: center; margin-top: 0; margin-bottom: 20px; font-size: 22px; }
+    .grid-select { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 600px) { .grid-select { grid-template-columns: 1fr; gap: 15px; } }
+    label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #475569; }
+    select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 15px; background-color: #fff; color: #1e293b; cursor: pointer; }
+    select:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+    
+    /* 🎯 核心秘密武器：無縫加載客製化完整 HTML 畫面的容器 */
+    #iframeWrapper { max-width: 800px; margin: 0 auto; display: none; border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); background: #ffffff; }
+    #targetFormIframe { width: 100%; height: 1100px; border: none; display: block; }
+    
+    #loadingOverlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:9999; text-align:center; padding-top:200px; font-size:18px; font-weight:bold; color:#0284c7; }
+  </style>
+</head>
+<body>
+
+<div id="loadingOverlay">正在安全載入專屬填單系統，請稍候...</div>
+
+<div class="selector-container">
+  <h2>愛玩旅遊 線上數位文件簽署中心</h2>
+  <div class="grid-select">
+    
+    <div>
+      <label>第一步：請選擇您參加的團體行程</label>
+      <select id="tourSelect" onchange="onTourChanged()">
+        <option value="">-- 正在連線資料庫，請稍候 --</option>
+      </select>
+    </div>
+
+    <div>
+      <label>第二步：請選擇要簽署的文件類型</label>
+      <select id="formTypeSelect" onchange="onFormTypeChanged()" disabled style="background-color: #f8fafc; cursor: not-allowed;">
+        <option value="">-- 請先選取團體行程 --</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<div id="iframeWrapper">
+  <iframe id="targetFormIframe" src=""></iframe>
+</div>
+
+<script>
+  // 🎯 請將下方的網址替換為您發布的最新 GAS 網頁應用程式網址
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
+
+  let selectedTourDetails = null;
+
+  // 網頁開啟時，立刻去後台把所有開團行程撈回來
+  window.addEventListener('DOMContentLoaded', () => {
+    loadAllTours();
+  });
+
+  function loadAllTours() {
+    fetch(`${GAS_WEB_APP_URL}?action=getAllTours`)
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          const select = document.getElementById('tourSelect');
+          select.innerHTML = '<option value="">-- 請選擇您參加的團體 --</option>';
+          data.tours.forEach(tour => {
+            let opt = document.createElement('option');
+            opt.value = tour.tourId;
+            opt.textContent = `[${tour.tourId}] ${tour.tourName}`;
+            select.appendChild(opt);
+          });
+        }
+      }).catch(err => alert("與愛玩旅遊資料庫連線失敗"));
+  }
+
+  // 當第一步「選完團體」
+  function onTourChanged() {
+    const tourId = document.getElementById('tourSelect').value;
+    const formTypeSelect = document.getElementById('formTypeSelect');
+    const iframeWrapper = document.getElementById('iframeWrapper');
+    
+    // 重置後方畫面
+    iframeWrapper.style.display = "none";
+    document.getElementById('targetFormIframe').src = "";
+    formTypeSelect.value = "";
+
+    if(!tourId) {
+      formTypeSelect.disabled = true;
+      formTypeSelect.style.backgroundColor = "#f8fafc";
+      formTypeSelect.style.cursor = "not-allowed";
+      formTypeSelect.innerHTML = '<option value="">-- 請先選取團體行程 --</option>';
+      return;
+    }
+
+    document.getElementById('loadingOverlay').style.display = "block";
+
+    // 抓取該團詳細資料（包含出發日期、團名等）
+    fetch(`${GAS_WEB_APP_URL}?action=getTour&tourId=${encodeURIComponent(tourId)}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loadingOverlay').style.display = "none";
+        if(data.status === "success") {
+          selectedTourDetails = data; // 暫存這團的所有背景個資
+          
+          // 啟用並解鎖第二步選單
+          formTypeSelect.disabled = false;
+          formTypeSelect.style.backgroundColor = "#fff";
+          formTypeSelect.style.cursor = "pointer";
+          formTypeSelect.innerHTML = `
+            <option value="">-- 請點選要簽署的文件 --</option>
+            <option value="affidavit.html">📄 自帶證照切結書</option>
+            <option value="contract.html">✍️ 國外旅遊定型化契約書</option>
+          `;
+        } else {
+          alert(data.message);
+        }
+      });
+  }
+
+  // 🎯 最核心精髓：當第二步選擇「切結書」或「契約書」，直接把您設計好的獨立網頁整個加載進來！
+  function onFormTypeChanged() {
+    const targetHtmlFile = document.getElementById('formTypeSelect').value;
+    const iframeWrapper = document.getElementById('iframeWrapper');
+    const iframe = document.getElementById('targetFormIframe');
+
+    if(!targetHtmlFile) {
+      iframeWrapper.style.display = "none";
+      iframe.src = "";
+      return;
+    }
+
+    document.getElementById('loadingOverlay').style.display = "block";
+
+    // 🚀 自動將剛剛查到的團號、團名、日期，變成網址參數（Query String）傳遞給您的前台 HTML 網頁
+    const queryParams = `?tourId=${encodeURIComponent(selectedTourDetails.tourId)}&tourName=${encodeURIComponent(selectedTourDetails.tourName)}&tourDate=${encodeURIComponent(selectedTourDetails.tourDate)}`;
+    
+    // 組合出最終要開啟的網頁檔案連結（例如 affidavit.html?tourId=XXX&tourName=OOO）
+    iframe.src = targetHtmlFile + queryParams;
+
+    // 當獨立網頁載入完成後，關閉鎖定畫面，並平滑滾動呈現出來
+    iframe.onload = function() {
+      document.getElementById('loadingOverlay').style.display = "none";
+      iframeWrapper.style.display = "block";
+      iframeWrapper.scrollIntoView({ behavior: 'smooth' });
+    };
+  }
+</script>
+
+</body>
+</html>

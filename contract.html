@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>愛玩旅遊 - 國外旅遊定型化契約書</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* 簽名畫布樣式 */
+        #sig-canvas {
+            border: 2px dashed #cbd5e1;
+            background-color: #f8fafc;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        /* 完整合約滾動視窗 */
+        .contract-box {
+            max-height: 500px;
+            overflow-y: scroll;
+            border: 1px solid #cbd5e1;
+            padding: 24px;
+            background-color: #fafafa;
+            font-size: 0.875rem;
+            line-height: 1.75;
+        }
+        .contract-box h4 {
+            color: #0f172a;
+            font-weight: 700;
+            margin-top: 1.75rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 0.25rem;
+        }
+        .contract-box p {
+            margin-bottom: 0.75rem;
+            text-align: justify;
+            text-indent: 2rem;
+        }
+        .contract-box p.no-indent {
+            text-indent: 0;
+        }
+        /* 變數強調樣式 */
+        .db-field {
+            color: #0284c7;
+            font-weight: 600;
+            background-color: #f0f9ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px inline #bae6fd;
+            display: inline-block;
+            text-indent: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen py-10 px-4">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 p-6 md:p-10">
+        <div class="text-center border-b border-gray-200 pb-6 mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-wide">愛玩旅遊</h1>
+            <h2 class="text-xl font-semibold text-sky-600 mt-2">國外旅遊定型化契約書</h2>
+            <p class="text-xs text-gray-400 mt-1">中華民國112年9月8日觀業字第1123002067函修正版文本</p>
+        </div>
+
+        <div id="loading-status" class="bg-amber-50 text-amber-700 p-3 rounded-lg text-sm mb-6 font-medium text-center">
+            正在從系統資料庫載入團體基本資訊及專屬行程表，請稍候...
+        </div>
+
+        <form id="sign-form" class="space-y-6">
+            <input type="hidden" id="formType" name="formType" value="Contract">
+            <input type="hidden" id="tourId" name="tourId">
+
+            <div class="bg-slate-50 rounded-lg p-5 border border-slate-100 space-y-4">
+                <h3 class="font-semibold text-gray-700 text-lg border-l-4 border-sky-50 pl-2">團體旅遊快訊</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <label class="block text-gray-500 font-medium">團體代號</label>
+                        <p id="display-tourId" class="mt-1 font-semibold text-gray-800">--</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 font-medium">出發日期</label>
+                        <p id="display-tourDate" class="mt-1 font-semibold text-gray-800">--</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-500 font-medium">行程名稱</label>
+                        <p id="display-tourName" class="mt-1 font-semibold text-gray-800">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-bold text-gray-950">契約合約完整條文（請向下滑動閱讀完整內容）</label>
+                <div class="contract-box rounded-lg text-gray-600">
+                    <p class="font-bold text-gray-900 no-indent mb-2">立契約書人</p>
+                    <p class="no-indent mb-4">旅客（以下稱甲方）與旅行業（以下稱乙方：皇朝國際旅行社股份有限公司/愛玩旅遊），甲乙雙方同意就本旅遊事項，依下列約定辦理。</p>
+                    
+                    <h4>第一條（國外旅遊之意義）</h4>
+                    <p>本契約所謂國外旅遊，係指到中華民國疆域以外其他國家或地區旅遊赴中國大陸旅行者，準用本旅遊契約之約定。</p>
+
+                    <h4>第二條（適用之範圍及順序）</h4>
+                    <p>甲乙雙方關於本旅遊之權利義務，依本契約條款之約定定之；本契約中未約定者，適用中華民國有關法令之規定。</p>
+
+                    <h4>第三條（旅遊團名稱、旅遊行程及廣告責任）</h4>
+                    <p class="no-indent pl-8">本旅遊團名稱為：<span id="field-tourName" class="db-field">載入中...</span></p>
+                    <p class="no-indent pl-8">旅遊地區（國家、城市或觀光地點）：<span id="field-tourDestination" class="db-field">載入中...</span></p>
+                    <p class="no-indent pl-8">行程（啟程出發地點、回程之終止地點、日期、交通工具、住宿旅館、餐飲、遊覽、安排購物行程及其所附隨之服務說明）：詳如附件</p>
+                    <p>與本契約有關之附件、廣告、宣傳文件、行程表或說明會之說明內容均視為本契約內容之一部分。乙方應確保廣告內容之真實，對甲方所負之義務不得低於廣告之內容。</p>
+                    <p>第一項記載得以所刊登之廣告、宣傳文件、行程表或說明會之說明內容代之。</p>
+                    <p>未記載第一項內容或記載之內容與刊登廣告、宣傳文件、行程表或說明會之說明記載不符者，以最有利於甲方之內容為準。</p>
+
+                    <h4>第四條（集合及出發時地）</h4>
+                    <p class="no-indent pl-8">甲方應於民國 <span id="field-tourAssembleTime" class="db-field">載入中...</span> 於 <span id="field-tourAssemblePlace" class="db-field">載入中...</span> 準時集合出發。甲方未準時到約定地點集合致未能出發，亦未能中途加入旅遊者，視為甲方任意解除契約，乙方得依第十三條之約定，行使損害賠償請求權。</p>
+
+                    <h4>第五條（旅遊費用及付款方式）</h4>
+                    <p class="no-indent pl-8">旅遊費用：總計新台幣 <span id="field-tourFeeText" class="db-field">載入中...</span></p>
+                    <p>除雙方有特別約定者外，甲方應依下列約定繳付：</p>
+                    <p class="no-indent pl-8">簽訂本契約時，甲方應繳付新臺幣 <span id="field-paymentAmount1" class="db-field">載入中...</span> 元。</p>
+                    <p class="no-indent pl-8">其餘款項於出發前三日或說明會時繳清。</p>
+                    <p>前項之特別約定，除經雙方同意並增訂其他協議事項於本契約第三十七條，乙方不得以任何名義要求增加旅遊費用。</p>
+
+                    <h4>第六條（旅客怠於給付旅遊費用之效力）</h4>
+                    <p>甲方因可歸責自己之事由，怠於給付旅遊費用者，乙方得定相當期限催告甲方給付，甲方逾期不為給付者，乙方得終止契約. 甲方應賠償之費用，依第十三條約定辦理；乙方如有其他損害，並得請求賠償。</p>
+
+                    <h4>第七條（旅客協力義務）</h4>
+                    <p>旅遊需甲方之行為始能完成，而甲方不為其行為者，乙方得定相當期限，催告甲方為之。甲方逾期不為其行為者，乙方得終止契約，並得請求賠償因契約終止而生之損害。</p>
+                    <p>旅遊開始後，乙方依前項規定終止契約時，甲方得請求乙方墊付費用將其送回原出發地。於到達後，由甲方附加年利率 5 ％利息償還乙方。</p>
+
+                    <h4>第八條（旅遊費用所涵蓋之項目）</h4>
+                    <p class="no-indent pl-8">甲方依第五條約定繳納之旅遊費用，除雙方依第三十七條另有約定以外，應包括下列項目：</p>
+                    <p class="no-indent pl-8">一、代辦證件之行政規費：乙方代理甲方辦理出國所需之手續費及簽證費及其他規費。</p>
+                    <p class="no-indent pl-8">二、交通運輸費：旅程所需各種交通運輸之費用。</p>
+                    <p class="no-indent pl-8">三、餐飲費：旅程中所列應由乙方安排之餐飲費用。</p>
+                    <p class="no-indent pl-8">四、住宿費：旅程中所列住宿及旅館之費用，如甲方需要單人房，經乙方同意安排者，甲方應補繳所需差額。</p>
+                    <p class="no-indent pl-8">五、遊覽費用：旅程中所列之一切遊覽費用及入場門票費等。</p>
+                    <p class="no-indent pl-8">六、接送費：旅遊期間機場、港口、車站等與旅館間之一切接送費用。</p>
+                    <p class="no-indent pl-8">七、行李費：團體行李往返機場、港口、車站等與旅館間之一切接送費用及團體行李接送人員之小費，行李數量之重量依航空公司規定辦理。</p>
+                    <p class="no-indent pl-8">八、稅捐：各地機場服務稅捐及團體餐宿稅捐。</p>
+                    <p class="no-indent pl-8">九、服務費：領隊及其他乙方為甲方安排服務人員之報酬。</p>
+                    <p class="no-indent pl-8">十、保險費：責任保險及履約保證保險。</p>
+                    <p>前項第二款交通運輸費及第五款遊覽費用，其費用於契約簽訂後經政府機關或經營管理業者公布調高或調低逾百分之十者，應由甲方補足，或由乙方退還。</p>
+                    <p>第一項第二款至第五款之年長者門票減免、兒童住宿不佔床及各項優惠等，詳如附件（報價單）。如契約相關文件均未記載者，甲方得請求如實退還差額。</p>
+
+                    <h4>第九條（旅遊費用所未涵蓋項目）</h4>
+                    <p class="no-indent pl-8">第五條之旅遊費用，除雙方依第三十七條另有約定者外，不包含下列項目：</p>
+                    <p class="no-indent pl-8">一、非本旅遊契約所列行程之一切費用。</p>
+                    <p class="no-indent pl-8">二、甲方之個人費用：如自費行程費用、行李超重費、飲料及酒類、洗衣、電話、網際網路使用費、私人交通費、行程外陪同購物之報酬、自由活動費、個人傷病醫療費、宜自行給與提供個人服務者（如旅館客房服務人員）之小費或尋回遺失物費用及報酬。</p>
+                    <p class="no-indent pl-8">三、未列入旅程之簽證、機票及其他有關費用。</p>
+                    <p class="no-indent pl-8">四、建議任意給予隨團領隊人員、當地導遊、司機之小費。</p>
+                    <p class="no-indent pl-8">五、保險費：甲方自行投保旅行平安保險之費用。</p>
+                    <p class="no-indent pl-8">六、其他由乙方代辦代收之費用。</p>
+                    <p>前項第二款、第四款建議給予之小費，乙方應於出發前，說明各觀光地區小費收取狀況及約略金額。</p>
+
+                    <h4>第十條（組團旅遊最低人數）</h4>
+                    <p class="no-indent pl-8">本旅遊團須有 <span id="field-minTourPeople" class="db-field">載入中...</span> 人以上簽約參加始組成。如未達前定人數，乙方應於預訂出發之 七 日前(至少七日，如未記載時，視為七日)通知甲方解除契約；怠於通知致甲方受損害者，乙方應賠償甲方損害。</p>
+                    <p>前項組團人數如未記載者，視為無最低組團人數；其保證出團者，亦同。</p>
+                    <p>乙方依第一項規定解除契約後，得依下列方式之一，返還或移作依第二款成立之新旅遊契約之旅遊費用：</p>
+                    <p class="no-indent pl-8">一、退還甲方已交付之全部費用。 But 乙方已代繳之行政規費得予扣除。</p>
+                    <p class="no-indent pl-8">二、徵得甲方同意，訂定另一旅遊契約，將依第一項解除契約應返還甲方之全部費用，移作該另訂之旅遊契約之費用全部或一部。如有超出之賸餘費用，應退還甲方。</p>
+
+                    <h4>第十一條（代辦簽證、洽購機票）</h4>
+                    <p>如確定所組團體能成行，乙方即應負責為甲方申辦護照及依旅程所需之簽證，並代訂妥機位及旅館。乙方應於預定出發七日前，或於舉行出國說明會時，將甲方之護照、簽證、機票、機位、旅館及其他必要事項向甲方報告，並以書面行程表確認之。乙方怠於履行上述義務時，甲方得拒絕形象或解除契約，乙方即應退還甲方所繳之所有費用。</p>
+                    <p>乙方應於預定出發日前，將本契約所列旅遊地之地區城市、國家或觀光點之風俗人情、地理位置或其他有關旅遊應注意事項儘量提供甲方旅遊參考。</p>
+
+                    <h4>第十二條（因可歸責於旅行業之事由致無法成行）</h4>
+                    <p>因可歸責於乙方之事由，致旅遊活動無法成行者，乙方於知悉旅遊活動無法成行時，應即通知甲方且說明其事由，並退還甲方已繳之旅遊費用。乙方怠於通知者，應賠償甲方依旅遊費用之全部計算之違約金。</p>
+                    <p>乙方已為前項通知者，則按通知到達甲方時，距出發日期時間之長短，依下列規定計算其應賠償甲方之違約金：</p>
+                    <p class="no-indent pl-8">一、通知於出發日前第四十一日以前到達者，賠償旅遊費用百分之五。</p>
+                    <p class="no-indent pl-8">二、通知於出發日前第三十一日至第四十日以內到達者，賠償旅遊費用百分之十。</p>
+                    <p class="no-indent pl-8">三、通知於出發日前第二十一日至第三十日以內到達者，賠償旅遊費用百分之二十。</p>
+                    <p class="no-indent pl-8">四、通知於出發日前第二日至第二十日以內到達者，賠償旅遊費用百分之三十。</p>
+                    <p class="no-indent pl-8">五、通知於出發日前一日到達者，賠償旅遊費用百分之五十。</p>
+                    <p class="no-indent pl-8">六、通知於出發當日以後到達者，賠償旅遊費用百分之一百。</p>
+                    <p>甲方如能證明其所受損害超過前項各款基準者，得就其實際損害請求賠償。</p>
+
+                    <h4>第十三條（出發前旅客任意解除契約及其責任）</h4>
+                    <p>甲方於旅遊活動開始前解除契約者，應依乙方提供之收據，繳交行政規費，並應賠償乙方之損失，其賠償基準如下：</p>
+                    <p class="no-indent pl-8">一、旅遊開始前第四十一日以前解除契約者，賠償旅遊費用百分之五。</p>
+                    <p class="no-indent pl-8">二、旅遊開始前第三十一日至第四十日以內解除契約者，賠償旅遊費用百分之十。</p>
+                    <p class="no-indent pl-8">三、旅遊開始前第二十一日至第三十日以內解除契約者，賠償旅遊費用百分之二十。</p>
+                    <p class="no-indent pl-8">四、旅遊開始前第二日至第二十日以內解除契約者，賠償旅遊費用百分之三十。</p>
+                    <p class="no-indent pl-8">五、旅遊開始前一日解除契約者，賠償旅遊費用百分之五十。</p>
+                    <p class="no-indent pl-8">六、甲方於旅遊開始日或開始後解除契約或未通知不參加者，賠償旅遊費用百分之一百。</p>
+                    <p>前項規定作為損害賠償計算基準之旅遊費用，應先扣除行政規費後計算之。</p>
+                    <p>乙方如能證明其所受損害超過第一項之各款基準者，得就其實際損害請求賠償。</p>
+
+                    <h4>第十四條（出發前有法定原因解除契約）</h4>
+                    <p>因不可抗力或不可歸責於雙方當事人之事由，致本契約之全部或一部無法履行時，任何一方得解除契約，且不負損害賠償責任。</p>
+                    <p>前項情形，乙方應提出已代繳之行政規費或履行本契約已支付之必要費用之單據，經核實後予以扣除，並將餘款退還甲方。</p>
+                    <p>任何一方知悉旅遊活動無法成行時，應即通知他方並說明其事由；其怠於通知致他方受有損害時，應負賠償責任。</p>
+                    <p>為維護本契約旅遊團體之安全與利益，乙方依第一項為解除契約後，應為有利於團體旅遊之必要措置。</p>
+
+                    <h4>第十五條（出發前客觀風險事由解除契約）</h4>
+                    <p>出發前，本旅遊團所前往旅遊地區之一，有事實足認危害旅客生命、身體、健康、財產安全之虞者，準用前條之規定，得解除契約。但解除之一方，應另按旅遊費用百分之五補償他方（不得超過百分之五）。</p>
+
+                    <h4>第十六條（領隊）</h4>
+                    <p>乙方應指派領有領隊執業證之領隊。</p>
+                    <p>乙方違反前項規定，應賠償甲方每人以每日新臺幣一千五百元乘以全部旅遊日數，再除以實際出團人數計算之三倍違約金。甲方受有其他損害者，並得請求乙方損害賠償。</p>
+                    <p>領隊應帶領甲方出國旅遊，並為甲方辦理出入國境手續、交通、食宿、遊覽及其他完成旅遊所須之往返全程隨團服務。</p>
+
+                    <h4>第十七條（證照之保管及返還）</h4>
+                    <p>乙方代理甲方辦理出國簽證或旅遊手續時，應妥慎保管甲方之各項證照，及申請該證照而持有甲方之印章、身分證等，乙方如有遺失或毀損者，應行補辦；如致甲方受損害者，應賠償甲方之損害。</p>
+                    <p>甲方於旅遊期間，應自行保管其自有之旅遊證件。但基於辦理通關過境等手續之必要，或經乙方同意者，得交由乙方保管。</p>
+                    <p>前二項旅遊證件，乙方及其受僱人應以善良管理人之注意保管之；甲方得隨時取回，乙方及其受僱人不得拒絕。</p>
+
+                    <h4>第十八條（旅客之變更權）</h4>
+                    <p class="no-indent pl-8">甲方於旅遊開始 日前，因故不能參加旅遊者，得變更由第三人假裝參加旅遊。乙方非有正當理由，不得拒絕。</p>
+                    <p class="no-indent pl-8">前項情形，如因而增加費用，乙方得請求該變更後之第三人給付；如減少費用，甲方不得請求返還。甲方並應於接到乙方通知後 日內協同該第三人到乙方營業處所辦理契約承擔手續。</p>
+                    <p>承受本契約之第三人，與甲方雙方辦理承擔手續完畢起，承繼甲方基於本契約之一切權利義務。</p>
+
+                    <h4>第十九條（旅行業務之轉讓）</h4>
+                    <p>乙方於出發前如將本契約變更轉讓予其他旅行業者，應經甲方書面同意。甲方如不同意者，得解除契約，乙方應即時將甲方已繳之全部旅遊費用退還；甲方受有損害者，並得請求賠償。</p>
+                    <p>甲方於出發後始發覺或被告知本契約已轉讓其他旅行業，乙方應賠償甲方全部旅遊費用百分之五之違約金；甲方受有損害者，並得請求賠償。受讓之旅行業者或其履行輔助人，關於旅遊義務之違反，有故意或過失時，甲方亦得請求讓與之旅行業者負責。</p>
+
+                    <h4>第二十條（國外旅行業責任歸屬）</h4>
+                    <p>乙方委託國外旅行業安排旅遊活動，因國外旅行業有違反本契約或其他不法情事，致甲方受損害時，乙方應與自己之違約或不法行為負同一責任。但由甲方自行指定或旅行地特殊情形而無法選擇受託者，不在此限。</p>
+
+                    <h4>第二十一條（賠償之代位）</h4>
+                    <p>乙方於賠償甲方所受損害後，甲方應將其對第三人之損害賠償請求權讓與乙方，並交付行使損害賠償請求權所需之相關文件及證據。</p>
+
+                    <h4>第二十二條（因可歸責於旅行業之事由致旅遊內容變更）</h4>
+                    <p>旅程中之食宿、交通、觀光點及遊覽項目等，應依本契約所訂等級與內容辦理，甲方不得要求變更，但乙方同意甲方之要求而變更者，不在此限，惟其所增加之費用應由甲方負擔。除非有本契約第十四條或第二十六條之情事，乙方不得以任何名義或理由變更旅遊內容。因可歸責於乙方之事由，致未達成旅遊契約所定旅程、交通、食宿或遊覽項目等事宜時，甲方得請求乙方賠償各該差額二倍之違約金。</p>
+                    <p>乙方應提出前項差額計算之說明，如未提出差額計算之說明時，其違約金之計算至少為全部旅遊費用之百分之五。</p>
+                    <p>甲方受有損害者，另得請求賠償。</p>
+
+                    <h4>第二十三條（因可歸責於旅行業之事由致無法完成旅遊或致旅客遭留置）</h4>
+                    <p>旅行團出發後，因可歸責於乙方之事由，致甲方因簽證、機票或其他問題無法完成其中之部分旅遊者，乙方除依二十四條規定辦理外，另應以自己之費用安排甲方至次一旅遊地，與其他團員會合；無法完成旅遊之情形，對全部團員均屬存在時，並應依相當之條件安排其他旅遊活動代之；如無次一旅遊地時，應安排甲方返國。等候安排行程期間，甲方所產生之食宿、交通或其他必要費用，應由乙方負擔。</p>
+                    <p>前項情形，乙方怠於安排交通時，甲方得搭乘相當等級之交通工具至次一旅遊地或返國；其所支出之費用，應由乙方負擔。</p>
+                    <p>乙方於第一項、第二項情形未安排交通或替代旅遊時，應退還甲方未旅遊地部分之費用，並賠償同額之懲罰性違約金。</p>
+                    <p>因可歸責於乙方之事由，致甲方遭恐怖分子留置、當地政府逮捕、羈押或留置時，乙方應賠償甲方以每日新台幣二萬元乘以逮捕羈押或留置日數計算之懲罰性違約金，並應負責迅速接洽救助事宜，將甲方安排返國，其所需一切費用，由乙方負擔。留置時數在五小時以上未滿一日者，以一日計算。</p>
+
+                    <h4>第二十四條（因可歸責於旅行業之事由致行程延誤時間）</h4>
+                    <p>因可歸責於乙方之事由，致延誤行程期間，甲方所支出之食宿或其他必要費用，應由乙方負擔。甲方就其時間之浪費，得按日請求賠償。每日賠償金額，以全部旅遊費用除以全部旅遊日數計算。但行程延誤之時間浪費，以不超過全部旅遊日數為限。</p>
+                    <p>前項每日延誤行程之時間浪費，在五小時以上未滿一日者，以一日計算。</p>
+                    <p>甲方受有其他損害者，另得請求賠償。</p>
+
+                    <h4>第二十五條（旅行業棄置或留滯旅客）</h4>
+                    <p>乙方於旅遊途中，因故意棄置或留滯甲方時，除應負擔棄置或留滯期間甲方支出之食宿及其他必要費用，按實計算退還甲方未完成旅程之費用，及由出發地至第一旅遊地與最後旅遊地返回之交通費用外，並應至少賠償依全部旅遊費用除以全部旅遊日數乘以棄置或留滯日數後相同金額五倍之違約金。</p>
+                    <p>乙方於旅遊途中，因重大過失有前項棄置或留滯甲方情事時，乙方除應依前項規定負擔相關費用外，並應賠償依前項規定計算之三倍違約金。</p>
+                    <p>乙方於旅遊途中，因過失有第一項棄置或留滯甲方情事時，乙方除應依前項規定負擔相關費用外，並應賠償依第一項規定計算之一倍違約金。</p>
+                    <p>前三項情形之棄置或留滯甲方之時間，在五小時以上未滿一日者，以一日計算；乙方並應儘速依預訂旅程安排旅遊活動，或安排甲方返國。</p>
+                    <p>甲方受有損害者，另得請求賠償。</p>
+
+                    <h4>第二十六條（旅遊途中因不可抗力或不可歸責於旅行業之事由致旅遊內容變更）</h4>
+                    <p>旅遊途中因不可抗力或不可歸責於乙方之事由，致無法依預定之旅程、交通、食宿或遊覽項目等履行時，為維護本契約旅遊團體之安全及利益，乙方得變更旅程、遊覽項目或更換食宿、旅程；其因此所增加之費用，不得向甲方收取，所減少之費用，應退還甲方。</p>
+                    <p>甲方不同意前項變更旅程時，得終止本契約，並得請求乙方墊付費用將其送回原出發地，於到達後附加年利率 5 ％利息償還乙方。</p>
+
+                    <h4>第二十七條 （責任歸屬及協辦）</h4>
+                    <p>旅遊期間，因不可歸責於乙方之事由，致甲方搭乘飛機、輪船、火車、捷運、纜車等大眾運輸工具所受損害者，應由各該提供服務之業者直接對甲方負責。但乙方應盡善良管理人之注意，協助甲方處理。</p>
+
+                    <h4>第二十八條（旅客終止契約後之回程安排）</h4>
+                    <p>甲方於旅遊活動開始後，怠於配合乙方完成旅遊所需之行為致影響後續旅遊行程，而終止契約者，甲方得請求乙方墊付費用將其送回原出發地，於到達後附加年利率 5 ％利息償還之，乙方不得拒絕。</p>
+                    <p>前項情形乙方因甲方退出旅遊活動後，應可節省或無須支出之費用，應退還甲方。</p>
+                    <p>乙方因第一項事由所受之損害，得向甲方請求賠償。</p>
+
+                    <h4>第二十九條 （出發後旅客任意終止契約）</h4>
+                    <p>甲方於旅遊活動開始後，中途離隊退出旅遊活動時，不得要求乙方退還旅遊費用。</p>
+                    <p>前項情形，乙方因甲方退出旅遊活動後，應可節省或無須支出之費用，應退還甲方。乙方並應為甲方安排脫隊後返回出發地之住宿及交通，其費用由甲方負擔。</p>
+                    <p>甲方於旅遊活動開始後，未能及時参加依本契約所排定之行程者，視為自願放棄其權利，不得向乙方要求退費或任何補償。</p>
+
+                    <h4>第三十條（旅行業之協助處理義務）</h4>
+                    <p>甲方在旅遊中發生身體或財產上之事故時，乙方應盡善良管理人之注意為必要之協助及處理。</p>
+                    <p>前項之事故，係因非可歸責於乙方之事由所致者，其所生之費用，由甲方負擔。</p>
+
+                    <h4>第三十一條（旅行業應投保責任保險及履約保證保險）</h4>
+                    <p>乙方應依主管機關之規定辦理責任保險及履約保證保險。責任保險投保金額：</p>
+                    <p class="no-indent pl-8">☑ 依法令規定。</p>
+                    <p class="no-indent pl-8">□ 高於法令規定，金額為：</p>
+                    <p class="no-indent pl-12">每一旅客意外死亡新臺幣__________元。</p>
+                    <p class="no-indent pl-12">每一旅客因意外事故所致體傷之醫療費用新臺幣____________元。</p>
+                    <p class="no-indent pl-12">國外旅遊善後處理費用新臺幣___________元。</p>
+                    <p class="no-indent pl-12">每一旅客證件遺失之損害賠償費用新臺幣____________元。</p>
+                    <p>乙方如未依前項規定投保者，於發生旅遊事故或不能履約之情形，應以主管機關規定最低投保金額計算其應理賠金額之三倍作為賠償金額。</p>
+                    <p>乙方應於出團前，告知甲方有關投保旅行業責任保險之保險公司名稱及其連絡方式，以備甲方查詢。</p>
+
+                    <h4>第三十二條（購物及瑕疵損害之處理方式）</h4>
+                    <p>為顧及旅客之購物方便，乙方如安排甲方購買禮品時，應於本契約第三條所列行程中預先載明。乙方不得於旅遊途中，臨時安排購物行程。 But 經甲方要求或同意者，不在此限。</p>
+                    <p>乙方安排特定場所購物，所購物品有貨價與品質不相當或瑕疪者，甲方得於受領所購物品後一個月內，請求乙方協助處理。</p>
+                    <p>乙方不得以任何理由或名義要求甲方代為攜帶物品返國。</p>
+
+                    <h4>第三十三條（誠信原則）</h4>
+                    <p>甲乙雙方應以誠信原則履行本契約。乙方依旅行業管理規則之規定，委託他旅行業代為招攬時，不得以未直接收甲方繳納費用，或以非直接招攬甲方參加本旅遊，或以本契約實際上非由乙方參與簽訂為抗辯。</p>
+
+                    <h4>第三十四條（消費爭議處理）</h4>
+                    <p>本契約履約過程中發生爭議時，乙方應即主動與甲方協商解決之。</p>
+                    <p class="no-indent pl-8">乙方消費爭議處理申訴（客服）專線或電子信箱：02-8773-6060 / service@royal-travel.com</p>
+                    <p>乙方對甲方之消費爭議申訴，應於三個營業日內專人聯繫處理，並依據消費者保護法之規定，自申訴之日起十五日內妥適處理之。</p>
+                    <p>雙方經協商後仍無法解決爭議時，甲方得向交通部觀光署、直轄市或各縣（市）消費者保護官、直轄市或各縣（市）消費者爭議調解委員會、中華民國旅行業品質保障協會或鄉（鎮、市、區）公所調解委員會提出調解（處）申請，乙方除有正當理由外，不得拒絕出席調解（處）會。</p>
+
+                    <h4>第三十五條（個人資料之保護）</h4>
+                    <p>乙方因履行本契約之需要，於代辦證件、安排交通工具、住宿、餐飲、遊覽及其所附隨服務之目的內，甲方同意乙方得依法規規定蒐集、處理、傳輸及利用其個人資料。</p>
+                    <p class="no-indent pl-8">甲方：</p>
+                    <p class="no-indent pl-12">□ 不同意（甲方如不同意，乙方將無法提供本契約之旅遊服務）。</p>
+                    <p class="no-indent pl-12">☑ 同意。</p>
+                    <p class="no-indent pl-12 text-xs text-sky-600 font-medium">（由系統後端根據網頁勾選紀錄自動填發認證）</p>
+                    <p>前項甲方之個人資料，乙方負有保密義務，非經甲方書面同意或依法規規定，不得將其個人資料提供予第三人。</p>
+                    <p>第一項甲方個人資料蒐集之特定目的消失或旅遊終了時，乙方應主動或依甲方之請求，刪除、停止處理或利用甲方個人資料。 But 因執行職務或業務所必須或經甲方書面同意者，不在此限。</p>
+                    <p>乙方發現第一項甲方個人資料遭竊取、竄改、毀損、滅失或洩漏時，應即向主管機關通報，並立即查明發生原因及責任歸屬，且依實際狀況採取必要措施。</p>
+                    <p>前項情形，乙方應以書面、簡訊或其他適當方式通知甲方，使其可得知悉各該事实及乙方已採取之處理措施、客服電話窗口等資訊。</p>
+
+                    <h4>第三十六條（約定合意管轄法院）</h4>
+                    <p>甲、乙雙方就本契約有關之爭議，以中華民國之法律為準據法。</p>
+                    <p>因本契約發生訴訟時，甲乙雙方同意以台北地方法院為第一審管轄法院，但不得排除消費者保護法第四十七條或民事訴訟法第四百三十六條之九規定之小額訴訟管轄法院之適用。</p>
+
+                    <h4>第三十七條（其他協議事項）</h4>
+                    <p>甲乙雙方同意遵守下列各項：</p>
+                    <p class="no-indent pl-8">甲方 ☑ 同意 □ 不同意 乙方將其姓名提供給其他同團旅客。</p>
+                    <p>前項協議事項，如有變更本契約其他條款之規定，除經交通部觀光署核准，其約定無效，但有利於甲方者，不在此限。</p>
+                </div>
+            </div>
+
+            <div id="itinerary-attachment" class="bg-sky-50 border border-sky-200 rounded-lg p-5 space-y-3">
+                <h3 class="font-semibold text-sky-900 text-base flex items-center">
+                    <span class="mr-2">📁</span> 本契約指定附件：團體旅遊行程表
+                </h3>
+                <p class="text-xs text-sky-700 leading-relaxed">
+                    依定型化契約第三條規定，本行程表內載明之景點、交通、每日住宿、餐食安排均為本契約之核心組件。請務必點擊下方連結確認您的專屬行程表內容：
+                </p>
+                <div class="pt-1">
+                    <a id="itinerary-link" href="#" target="_blank" class="inline-flex items-center px-4 py-2 bg-white border border-sky-300 rounded-md shadow-sm text-sm font-medium text-sky-700 hover:bg-sky-100 transition">
+                        <span class="mr-1.5">📄</span> <span id="itinerary-tourName-text">點此檢閱：線上正式附件行程表 (PDF)</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="font-semibold text-gray-700 text-lg border-l-4 border-sky-50 pl-2">旅客代表人與合約資料填寫</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="passengerName" class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
+                        <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2">
+                    </div>
+                    <div>
+                        <label for="passengerPhone" class="block text-sm font-medium text-gray-700">聯絡電話 <span class="text-red-500">*</span></label>
+                        <input type="tel" id="passengerPhone" name="passengerPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="如：0912345678">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="passengerAddress" class="block text-sm font-medium text-gray-700">通訊地址 <span class="text-red-500">*</span></label>
+                    <input type="text" id="passengerAddress" name="passengerAddress" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫完整收件地址">
+                </div>
+
+                <div>
+                    <label for="clientEmail" class="block text-sm font-medium text-gray-700">電子信箱 (用於接收完成之 PDF 契約書) <span class="text-red-500">*</span></label>
+                    <input type="email" id="clientEmail" name="clientEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="example@gmail.com">
+                </div>
+
+                <div>
+                    <label for="companionNamesText" class="block text-sm font-medium text-gray-700">隨行旅客名單 (選填)</label>
+                    <p class="text-xs text-gray-400 mb-1">本人已取得以下全體隨行旅客之授權代為簽署本契約：</p>
+                    <input type="text" id="companionNamesText" name="companionNamesText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫隨行同行人姓名。多位請用中文逗號分開，如：王小明，王大明">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">旅客代表人親筆手寫簽名處 <span class="text-red-500">*</span></label>
+                <div class="relative w-full">
+                    <canvas id="sig-canvas" width="600" height="200" class="w-full rounded-lg shadow-inner"></canvas>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="sig-clearBtn" class="px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded transition">清除重簽</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-lg text-sm text-gray-600 space-y-2">
+                <label class="flex items-start space-x-2">
+                    <input type="checkbox" required checked class="mt-1 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
+                    <span>本人確認已攜回審閱此契約書內容（含內文及附件旅遊行程表）至少一日，並充分理解且同意接受上述所有旅遊條款。</span>
+                </label>
+                <label class="flex items-start space-x-2">
+                    <input type="checkbox" required checked class="mt-1 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
+                    <span>【個人資料保護法】本人同意旅行社於代辦本次旅遊業務特定目的內蒐集、處理、傳輸及利用個人資料。</span>
+                </label>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+                <button type="submit" id="submit-btn" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                    確認無誤，進行線上契約具結簽署
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 在您原本的獨立網頁程式碼中加入這段，它會自動把大廳傳過來的團號團名填進去
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tId = urlParams.get('tourId') || '';
+  const tName = urlParams.get('tourName') || '';
+  const tDate = urlParams.get('tourDate') || '';
+
+  // 🎯 自動填入您原本前台對應的唯讀欄位或文字標籤
+  if(document.getElementById('tourId')) { document.getElementById('tourId').value = tId; }
+  if(document.getElementById('tourName')) { document.getElementById('tourName').value = tName; }
+  if(document.getElementById('tourDate')) { document.getElementById('tourDate').value = tDate; }
+  
+  // 如果您原本是用 textContent 顯示在畫面上，也可以這樣填：
+  // document.getElementById('previewTourName').textContent = tName;
+});
+
+        // 請將此處替換為您部署好的 Google Apps Script 網頁應用程式網址 (Web App URL)
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
+
+        // 1. 初始化頁面：從 URL 解析 tourId 參數並撈取團體基本資料與內文變數
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tourId = urlParams.get('tourId');
+
+            if (!tourId) {
+                document.getElementById('loading-status').className = "bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-6 font-medium text-center";
+                document.getElementById('loading-status').innerText = "⚠️ 錯誤：網址未帶入有效的團體代號（tourId），契約表單無法正常作業。";
+                document.getElementById('submit-btn').disabled = true;
+                return;
+            }
+
+            document.getElementById('tourId').value = tourId;
+
+            // 向 GAS 後端 API 發送 GET 請求拿取團體開團資料
+            fetch(`${GAS_WEB_APP_URL}?action=getTour&tourId=${tourId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        // 填入頂部快訊資訊
+                        document.getElementById('display-tourId').innerText = data.tourId || '--';
+                        document.getElementById('display-tourDate').innerText = data.tourDate || '--';
+                        document.getElementById('display-tourName').innerText = data.tourName || '--';
+                        
+                        // 填入契約書內文動態變數欄位
+                        document.getElementById('field-tourName').innerText = data.tourName || '--';
+                        document.getElementById('field-tourDestination').innerText = data.tourDestination || '--';
+                        document.getElementById('field-tourAssembleTime').innerText = data.tourAssembleTime || '--';
+                        document.getElementById('field-tourAssemblePlace').innerText = data.tourAssemblePlace || '--';
+                        document.getElementById('field-tourFeeText').innerText = data.tourFeeText || '--';
+                        document.getElementById('field-paymentAmount1').innerText = data.paymentAmount1 || '--';
+                        document.getElementById('field-minTourPeople').innerText = data.minTourPeople || '--';
+                        
+                        // 補安全機制防護，若資料庫無此變數則顯示默認值
+                        if(document.getElementById('field-CHANGE_PASSENGER_DAYS')) {
+                            document.getElementById('field-CHANGE_PASSENGER_DAYS').innerText = data.CHANGE_PASSENGER_DAYS || '--';
+                        }
+                        if(document.getElementById('field-COOP_DAYS')) {
+                            document.getElementById('field-COOP_DAYS').innerText = data.COOP_DAYS || '--';
+                        }
+
+                        // 🎯 核心修正：處理行程表附件 PDF 網址與強制滿版預覽邏輯
+                        const itineraryLink = document.getElementById('itinerary-link');
+                        const itineraryText = document.getElementById('itinerary-tourName-text');
+
+                        if(data.tourItineraryTable && data.tourItineraryTable.startsWith('http')) {
+                            let pdfUrl = data.tourItineraryTable.trim();
+                            
+                            // 防呆優化：如果帶入的是 Google 雲端硬碟標準單檔檢視網址，將其轉為 /preview 滿版乾淨介面
+                            if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
+                                pdfUrl = pdfUrl.split('/view')[0] + '/preview';
+                            }
+                            
+                            itineraryLink.href = pdfUrl;
+                            itineraryLink.target = "_blank"; // 確保恢復另外開啟分頁
+                            itineraryLink.className = "inline-flex items-center px-4 py-2 bg-white border border-sky-300 rounded-md shadow-sm text-sm font-medium text-sky-700 hover:bg-sky-100 transition cursor-pointer";
+                            // 修正點：改用 innerText 更新文字，不覆蓋 📄 圖示
+                            itineraryText.innerText = `點此線上檢閱：${data.tourName || '本團'} - 官方行程表檔案`;
+                        } else if (data.tourItineraryTable && data.tourItineraryTable.trim() !== "") {
+                            // 防呆：如果後端不是填寫網址而是純文字描述
+                            itineraryLink.removeAttribute('href');
+                            itineraryLink.removeAttribute('target');
+                            itineraryLink.className = "inline-flex items-center px-4 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm font-medium text-gray-700 cursor-default";
+                            itineraryText.innerText = data.tourItineraryTable;
+                        } else {
+                            // 完全沒有資料時
+                            itineraryLink.href = "javascript:void(0);";
+                            itineraryLink.removeAttribute('target');
+                            itineraryLink.className = "inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed";
+                            itineraryText.innerText = "本團暫無提供附件行程表";
+                        }
+
+                        document.getElementById('loading-status').style.display = 'none';
+                    } else {
+                        throw new Error(data.message || "找不到該團行程資料");
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('loading-status').className = "bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-6 font-medium text-center";
+                    document.getElementById('loading-status').innerText = `⚠️ 載入失敗：${err.message || '無法連線到資料庫或找不到該團資料'}`;
+                });
+        });
+
+        // 2. 電子簽名畫布控制邏輯
+        const canvas = document.getElementById('sig-canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        ctx.strokeStyle = "#0f172a"; 
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+
+        function getMousePos(canvasDom, touchOrMouseEvent) {
+            const rect = canvasDom.getBoundingClientRect();
+            const clientX = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientX : touchOrMouseEvent.clientX;
+            const clientY = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientY : touchOrMouseEvent.clientY;
+            return {
+                x: (clientX - rect.left) * (canvasDom.width / rect.width),
+                y: (clientY - rect.top) * (canvasDom.height / rect.height)
+            };
+        }
+
+        ['mousedown', 'touchstart'].forEach(eventName => {
+            canvas.addEventListener(eventName, (e) => {
+                drawing = true;
+                const pos = getMousePos(canvas, e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                e.preventDefault();
+            });
+        });
+
+        ['mousemove', 'touchmove'].forEach(eventName => {
+            canvas.addEventListener(eventName, (e) => {
+                if (!drawing) return;
+                const pos = getMousePos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                e.preventDefault();
+            });
+        });
+
+        ['mouseup', 'touchend'].forEach(eventName => {
+            window.addEventListener(eventName, () => { drawing = false; });
+        });
+
+        document.getElementById('sig-clearBtn').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        function isCanvasEmpty(canvasDom) {
+            const buffer = new Uint32Array(ctx.getImageData(0, 0, canvasDom.width, canvasDom.height).data.buffer);
+            return !buffer.some(color => color !== 0);
+        }
+
+        // 恢復提交按鈕正常狀態的輔助函數
+        function resetSubmitButton() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "確認無誤，進行線上契約具結簽署";
+            submitBtn.className = "w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2";
+        }
+
+        // 3. 表單提交處理
+        document.getElementById('sign-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (isCanvasEmpty(canvas)) {
+                alert("請於簽名區簽署旅客代表人的親筆姓名後再提交。");
+                return;
+            }
+
+            const signatureImage = canvas.toDataURL('image/png');
+            const formData = new FormData(this);
+            const payload = Object.fromEntries(formData.entries());
+            payload.signature = signatureImage; 
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "官方定型化契約具結提交中，請勿關閉網頁...";
+            submitBtn.className = "w-full py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed";
+
+            fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("🎉 契約簽署成功！正式旅遊定型化契約 PDF 憑證已同步寄發至您的電子信箱。");
+                } else {
+                    alert("提交失敗，原因：" + data.message);
+                    resetSubmitButton();
+                }
+            })
+            .catch(err => {
+                console.error("提交契約時發生錯誤:", err);
+                alert("⚠️ 連線伺服器失敗，請檢查網路狀態或稍後再試。");
+                resetSubmitButton();
+            });
+        });
+    </script>
+</body>
+</html>

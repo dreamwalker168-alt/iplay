@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>愛玩旅遊 - 旅客證照自帶切結書</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* 簽名畫布樣式 */
+        #sig-canvas {
+            border: 2px dashed #cbd5e1;
+            background-color: #f8fafc;
+            cursor: crosshair;
+            touch-action: none; /* 防止手機瀏覽器滑動干擾簽名 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen py-10 px-4">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 p-6 md:p-10">
+        <div class="text-center border-b border-gray-200 pb-6 mb-8">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-wide">愛玩旅遊</h1>
+            <h2 class="text-xl font-semibold text-sky-600 mt-2">旅客證照自帶切結書</h2>
+        </div>
+
+        <div id="loading-status" class="bg-amber-50 text-amber-700 p-3 rounded-lg text-sm mb-6 font-medium text-center">
+            正在從系統資料庫載入團體基本資訊，請稍候...
+        </div>
+
+        <form id="sign-form" class="space-y-6">
+            <input type="hidden" id="formType" name="formType" value="Affidavit">
+            <input type="hidden" id="tourId" name="tourId">
+
+            <div class="bg-slate-50 rounded-lg p-5 border border-slate-100 space-y-4">
+                <h3 class="font-semibold text-gray-700 text-lg border-l-4 border-sky-50 pl-2">團體旅遊資訊</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <label class="block text-gray-500 font-medium">團體代號</label>
+                        <p id="display-tourId" class="mt-1 font-semibold text-gray-800">--</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 font-medium">出發日期</label>
+                        <p id="display-tourDate" class="mt-1 font-semibold text-gray-800">--</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-500 font-medium">行程名稱</label>
+                        <p id="display-tourName" class="mt-1 font-semibold text-gray-880">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prose text-gray-600 text-sm leading-relaxed bg-slate-50 p-5 rounded-lg border border-slate-200">
+                <p class="font-medium text-gray-900 mb-2">立切結書人（即旅客代表人），參加愛玩旅遊上述團體行程：</p>
+                <p>茲因旅客個人因素，決定【自行攜帶並保管】出國所需之有效護照與簽證（護照效期需自出發日起算六個月以上）。</p>
+                <p class="mt-2">立切結書人承諾於出發當日準時抵達指定集合地點，並隨身攜帶上述證件。如因證件過期、損毀、遺漏或任何個人簽證資格問題導致無法成行、被拒絕登機或通關，其所衍生之一切取消費用、損失及法律責任，概由旅客自行負責，特立此書為憑。</p>
+            </div>
+
+            <div class="bg-amber-50/60 p-5 rounded-lg border border-amber-200 text-sm leading-relaxed">
+                <h4 class="font-bold text-amber-800 flex items-center mb-3">
+                    <span class="mr-1.5 text-base">⚠️</span> 【重要事項提醒】
+                </h4>
+                <p class="text-gray-700 font-medium mb-2">如您是屬於下列身分之旅客，敬請主動告知承辦人員，並務必確認證照內容：</p>
+                <ul class="space-y-3 text-gray-600 list-disc pl-4">
+                    <li>
+                        <strong class="text-gray-950">【軍職人員、役男】</strong>：出境須申請並於護照上加蓋<span class="text-red-600 font-medium">「出境許可章」</span>（許可有效日期至少需為出發後次一日），且需攜帶機關核准公文（文號需與「出境許可章」文號相符）。
+                    </li>
+                    <li>
+                        <strong class="text-gray-950">【剛退役者】</strong>：須先持身分證、退伍令、護照至有關機關修改身分證及護照上役別資料，否則會被限制出境。
+                    </li>
+                    <li>
+                        <strong class="text-gray-950">【多重國籍】</strong>：依規定，進出中華民國國境須使用同一本護照；並需自行攜帶並備妥可入出旅遊目的國境之簽證或護照，其相關規定或是用範圍，請逕洽「各國領事業務管理單位」，以確認入出旅遊目的國境之合法性。
+                    </li>
+                </ul>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="font-semibold text-gray-700 text-lg border-l-4 border-sky-50 pl-2">旅客代表人資料填寫</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="passengerName" class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
+                        <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2">
+                    </div>
+                    <div>
+                        <label for="passengerPhone" class="block text-sm font-medium text-gray-700">聯絡電話 <span class="text-red-500">*</span></label>
+                        <input type="tel" id="passengerPhone" name="passengerPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="如：0912345678">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="clientEmail" class="block text-sm font-medium text-gray-700">電子信箱 (用於接收完成之 PDF) <span class="text-red-500">*</span></label>
+                    <input type="email" id="clientEmail" name="clientEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="example@gmail.com">
+                </div>
+
+                <div>
+                    <label for="companionNamesText" class="block text-sm font-medium text-gray-700">隨行旅客名單 (選填)</label>
+                    <input type="text" id="companionNamesText" name="companionNamesText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫隨行家人朋友名字，多位請用逗號隔開。如：張三, 李四">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">旅客代表人親筆簽名區 <span class="text-red-500">*</span></label>
+                <div class="relative w-full">
+                    <canvas id="sig-canvas" width="600" height="200" class="w-full rounded-lg shadow-inner"></canvas>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="sig-clearBtn" class="px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded transition">清除重簽</button>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+                <button type="submit" id="submit-btn" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                    本人確認已閱畢重要提醒，簽署並送出
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+// 在您原本的獨立網頁程式碼中加入這段，它會自動把大廳傳過來的團號團名填進去
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tId = urlParams.get('tourId') || '';
+  const tName = urlParams.get('tourName') || '';
+  const tDate = urlParams.get('tourDate') || '';
+
+  // 🎯 自動填入您原本前台對應的唯讀欄位或文字標籤
+  if(document.getElementById('tourId')) { document.getElementById('tourId').value = tId; }
+  if(document.getElementById('tourName')) { document.getElementById('tourName').value = tName; }
+  if(document.getElementById('tourDate')) { document.getElementById('tourDate').value = tDate; }
+  
+  // 如果您原本是用 textContent 顯示在畫面上，也可以這樣填：
+  // document.getElementById('previewTourName').textContent = tName;
+});
+
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
+
+        // 1. 初始化頁面：從 URL 解析 tourId 參數並撈取資料
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tourId = urlParams.get('tourId');
+
+            if (!tourId) {
+                document.getElementById('loading-status').className = "bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-6 font-medium text-center";
+                document.getElementById('loading-status').innerText = "⚠️ 錯誤：網址未帶入有效的團體代號（tourId），表單無法正常作業。";
+                document.getElementById('submit-btn').disabled = true;
+                return;
+            }
+
+            document.getElementById('tourId').value = tourId;
+
+            // 向 GAS 後端 API 發送 Fetch 請求拿取團體資料
+            fetch(`${GAS_WEB_APP_URL}?action=getTour&tourId=${tourId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        document.getElementById('display-tourId').innerText = data.tourId;
+                        document.getElementById('display-tourDate').innerText = data.tourDate;
+                        document.getElementById('display-tourName').innerText = data.tourName;
+                        document.getElementById('loading-status').style.display = 'none';
+                    } else {
+                        throw new Error(data.message || "找不到該團行程");
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('loading-status').className = "bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-6 font-medium text-center";
+                    document.getElementById('loading-status').innerText = `⚠️ 無法帶入團體資料：${err.message} (目前單機測試中屬正常現象)`;
+                });
+        });
+
+        // 2. 電子簽名畫布控制邏輯
+        const canvas = document.getElementById('sig-canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        ctx.strokeStyle = "#0f172a"; 
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+
+        function getMousePos(canvasDom, touchOrMouseEvent) {
+            const rect = canvasDom.getBoundingClientRect();
+            const clientX = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientX : touchOrMouseEvent.clientX;
+            const clientY = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientY : touchOrMouseEvent.clientY;
+            return {
+                x: (clientX - rect.left) * (canvasDom.width / rect.width),
+                y: (clientY - rect.top) * (canvasDom.height / rect.height)
+            };
+        }
+
+        ['mousedown', 'touchstart'].forEach(eventName => {
+            canvas.addEventListener(eventName, (e) => {
+                drawing = true;
+                const pos = getMousePos(canvas, e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                e.preventDefault();
+            });
+        });
+
+        ['mousemove', 'touchmove'].forEach(eventName => {
+            canvas.addEventListener(eventName, (e) => {
+                if (!drawing) return;
+                const pos = getMousePos(canvas, e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                e.preventDefault();
+            });
+        });
+
+        ['mouseup', 'touchend'].forEach(eventName => {
+            window.addEventListener(eventName, () => { drawing = false; });
+        });
+
+        document.getElementById('sig-clearBtn').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        function isCanvasEmpty(canvasDom) {
+            const buffer = new Uint32Array(ctx.getImageData(0, 0, canvasDom.width, canvasDom.height).data.buffer);
+            return !buffer.some(color => color !== 0);
+        }
+
+        // 3. 表單送出處理
+        document.getElementById('sign-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (isCanvasEmpty(canvas)) {
+                alert("請於簽名區簽署您的親筆姓名後再行送出。");
+                return;
+            }
+
+            const signatureImage = canvas.toDataURL('image/png');
+            const formData = new FormData(this);
+            const payload = Object.fromEntries(formData.entries());
+            payload.signature = signatureImage; 
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "文件簽署提交中，請勿關閉視窗...";
+            submitBtn.className = "w-full py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed";
+
+            fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("🎉 簽署成功！感謝您的配合。正式合約憑證已寄發至您的信箱。");
+                } else {
+                    alert("提交失敗，原因：" + data.message);
+                    resetSubmitButton();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("提交送出失敗 (目前為單機測試狀態)。資料封包已封裝完成，串接 GAS 後即可正常送出。");
+                resetSubmitButton();
+            });
+        });
+
+        function resetSubmitButton() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "本人確認已閱畢重要提醒，簽署並送出";
+            submitBtn.className = "w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2";
+        }
+    </script>
+</body>
+</html>
