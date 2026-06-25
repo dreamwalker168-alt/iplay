@@ -11,12 +11,14 @@
             border: 2px dashed #cbd5e1;
             background-color: #f8fafc;
             cursor: crosshair;
-            touch-action: none; /* 嚴格防止手機瀏覽器滑動干擾簽名 */
+            /* 🚫 核心關鍵 1：禁止任何瀏覽器預設的觸控手勢（如網頁滑動、雙指縮放），全權交給 JS 處理 */
+            touch-action: none; 
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        /* 🎯 終極暴力破殼：當偵測到手機版 (螢幕小於 640px) */
+        /* 🎯 手機版極致撐開與破殼 */
         @media (max-width: 640px) {
-            /* 1. 讓內嵌網頁的 body 徹底釋放所有留白 */
             body {
                 padding: 4px 0px !important;
                 margin: 0px !important;
@@ -24,28 +26,25 @@
                 overflow-x: hidden;
             }
             
-            /* 2. 🎯 核心破殼語法：使用負邊距 (Negative Margin) 強制往外撐破父層的白色卡片限制 */
             .main-card {
-                margin-left: -16px !important;  /* 強制向左溢出，吃掉父層的內縮 */
-                margin-right: -16px !important; /* 強制向右溢出，吃掉父層的內縮 */
-                width: calc(100% + 32px) !important; /* 補回溢出的寬度，達到真正 100% 滿版 */
-                padding-left: 12px !important;
-                padding-right: 12px !important;
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+                width: 100% !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
                 border-radius: 0px !important;  /* 手機版不留圓角，直接貼邊 */
                 border-left: none !important;
                 border-right: none !important;
                 box-shadow: none !important;
             }
 
-            /* 3. 防止內文區塊再有過多內縮，確保文字有最大閱讀寬度 */
             .content-box {
-                padding-left: 10px !important;
-                padding-right: 10px !important;
+                padding-left: 8px !important;
+                padding-right: 8px !important;
                 margin-left: 0px !important;
                 margin-right: 0px !important;
             }
             
-            /* 4. 手機版字體微調放大，提升易讀性 */
             .prose p {
                 font-size: 15px !important;
                 line-height: 1.6 !important;
@@ -53,7 +52,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen py-4 sm:py-10 px-0 sm:px-4">
+<body class="bg-white text-gray-800 min-h-screen py-2 sm:py-10 px-0 sm:px-4">
 
     <div class="main-card max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 p-4 sm:p-6 md:p-10">
         <div class="text-center border-b border-gray-200 pb-4 mb-6">
@@ -139,7 +138,7 @@
             <div class="content-box space-y-2">
                 <label class="block text-base font-bold text-gray-800">旅客代表人親筆簽名區 <span class="text-red-500">*</span></label>
                 <div class="relative w-full">
-                    <canvas id="sig-canvas" height="600" class="w-full rounded-lg shadow-inner"></canvas>
+                    <canvas id="sig-canvas" height="500" class="w-full rounded-lg shadow-inner"></canvas>
                 </div>
                 <div class="flex justify-end">
                     <button type="button" id="sig-clearBtn" class="px-6 py-3 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition active:bg-gray-300">清除重簽</button>
@@ -203,71 +202,75 @@
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width;
-            canvas.height = rect.height || 600; // 🎯 強制實體像素高度為 600px
+            canvas.height = 500; // 🎯 實體像素高度最佳化固定為 500px
             
-            ctx.strokeStyle = "#0f172a"; 
-            ctx.lineWidth = 4.0; // 因畫布加大，筆觸同步微調加粗到 4.0，寫起來更飽滿
+            ctx.strokeStyle = "#020617"; 
+            ctx.lineWidth = 4.0; 
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
         }
 
         window.addEventListener('resize', resizeCanvas);
 
-        function getMousePos(canvasDom, touchOrMouseEvent) {
-            const rect = canvasDom.getBoundingClientRect();
-            let clientX, clientY;
-            
-            if (touchOrMouseEvent.touches && touchOrMouseEvent.touches.length > 0) {
-                clientX = touchOrMouseEvent.touches[0].clientX;
-                clientY = touchOrMouseEvent.touches[0].clientY;
-            } else {
-                clientX = touchOrMouseEvent.clientX;
-                clientY = touchOrMouseEvent.clientY;
-            }
-            
+        // 🎯 核心修正 2：多層內嵌框架下的滑動座標精確轉換
+        function getTouchPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             return {
                 x: clientX - rect.left,
                 y: clientY - rect.top
             };
         }
 
-        ['mousedown', 'touchstart'].forEach(eventName => {
-            canvas.addEventListener(eventName, (e) => {
-                drawing = true;
-                const pos = getMousePos(canvas, e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-                if (e.cancelable) e.preventDefault();
-            }, { passive: false });
-        });
+        // 🎯 核心修正 3：加入強制聚焦與嚴格事件捕獲，100% 阻斷外層框架捲軸干擾
+        canvas.addEventListener('touchstart', (e) => {
+            canvas.focus(); // 🚀 觸碰瞬間強制讓畫布取得焦點，不用先點擊別處
+            drawing = true;
+            const pos = getTouchPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            if (e.cancelable) e.preventDefault(); // 🚫 徹底沒收外層網頁的滾動事件
+        }, { passive: false });
 
-        ['mousemove', 'touchmove'].forEach(eventName => {
-            canvas.addEventListener(eventName, (e) => {
-                if (!drawing) return;
-                const pos = getMousePos(canvas, e);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-                if (e.cancelable) e.preventDefault();
-            }, { passive: false });
-        });
+        canvas.addEventListener('touchmove', (e) => {
+            if (!drawing) return;
+            const pos = getTouchPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            if (e.cancelable) e.preventDefault(); // 🚫 徹底沒收滾動事件，確保流暢寫入
+        }, { passive: false });
 
-        ['mouseup', 'touchend'].forEach(eventName => {
-            window.addEventListener(eventName, () => { drawing = false; });
+        window.addEventListener('touchend', () => { drawing = false; });
+
+        // 滑鼠相容事件
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            const pos = getTouchPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
         });
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+            const pos = getTouchPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
+        window.addEventListener('mouseup', () => { drawing = false; });
 
         document.getElementById('sig-clearBtn').addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         });
 
-        function isCanvasEmpty(canvasDom) {
-            const buffer = new Uint32Array(ctx.getImageData(0, 0, canvasDom.width, canvasDom.height).data.buffer);
+        function isCanvasEmpty() {
+            const buffer = new Uint32Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
             return !buffer.some(color => color !== 0);
         }
 
         document.getElementById('sign-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            if (isCanvasEmpty(canvas)) {
+            if (isCanvasEmpty()) {
                 alert("請於簽名區簽署您的親筆姓名後再行送出。");
                 return;
             }
