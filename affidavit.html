@@ -6,7 +6,7 @@
     <title>愛玩旅遊 - 旅客證照自帶切結書</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* 簽名畫布樣式 */
+        /* 簽名畫布基礎樣式 */
         #sig-canvas {
             border: 2px dashed #cbd5e1;
             background-color: #f8fafc;
@@ -14,28 +14,41 @@
             touch-action: none; /* 嚴格防止手機瀏覽器滑動干擾簽名 */
         }
 
-        /* 🎯 針對 iframe / 雙重框架包夾的極致破殼優化 */
+        /* 🎯 終極暴力破殼：當偵測到手機版 (螢幕小於 640px) */
         @media (max-width: 640px) {
-            /* 1. 強制拔除所有可能的外層留白 */
+            /* 1. 讓內嵌網頁的 body 徹底釋放所有留白 */
             body {
-                padding-left: 0px !important;
-                padding-right: 0px !important;
-                padding-top: 4px !important;
-                padding-bottom: 4px !important;
+                padding: 4px 0px !important;
+                margin: 0px !important;
+                width: 100vw !important;
+                overflow-x: hidden;
             }
-            /* 2. 讓最外層的白色卡片直接貼齊螢幕兩側，釋放所有隱形框架的寬度 */
+            
+            /* 2. 🎯 核心破殼語法：使用負邊距 (Negative Margin) 強制往外撐破父層的白色卡片限制 */
             .main-card {
-                padding-left: 8px !important;
-                padding-right: 8px !important;
-                border-radius: 0px !important; /* 手機上切齊邊緣 */
+                margin-left: -16px !important;  /* 強制向左溢出，吃掉父層的內縮 */
+                margin-right: -16px !important; /* 強制向右溢出，吃掉父層的內縮 */
+                width: calc(100% + 32px) !important; /* 補回溢出的寬度，達到真正 100% 滿版 */
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+                border-radius: 0px !important;  /* 手機版不留圓角，直接貼邊 */
                 border-left: none !important;
                 border-right: none !important;
                 box-shadow: none !important;
             }
-            /* 3. 防止內嵌文字變成擠壓窄條 */
+
+            /* 3. 防止內文區塊再有過多內縮，確保文字有最大閱讀寬度 */
             .content-box {
                 padding-left: 10px !important;
                 padding-right: 10px !important;
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+            }
+            
+            /* 4. 手機版字體微調放大，提升易讀性 */
+            .prose p {
+                font-size: 15px !important;
+                line-height: 1.6 !important;
             }
         }
     </style>
@@ -52,7 +65,7 @@
             正在從系統資料庫載入團體基本資訊，請稍候...
         </div>
 
-        <form id="sign-form" class="space-y-5">
+        <form id="sign-form" class="space-y-6">
             <input type="hidden" id="formType" name="formType" value="Affidavit">
             <input type="hidden" id="tourId" name="tourId">
 
@@ -61,33 +74,33 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-sm">
                     <div>
                         <label class="block text-gray-500 font-medium">團體代號</label>
-                        <p id="display-tourId" class="mt-0.5 font-semibold text-gray-800">--</p>
+                        <p id="display-tourId" class="mt-0.5 font-semibold text-gray-800 text-base">--</p>
                     </div>
                     <div>
                         <label class="block text-gray-500 font-medium">出發日期</label>
-                        <p id="display-tourDate" class="mt-0.5 font-semibold text-gray-800">--</p>
+                        <p id="display-tourDate" class="mt-0.5 font-semibold text-gray-800 text-base">--</p>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-gray-500 font-medium">行程名稱</label>
-                        <p id="display-tourName" class="mt-0.5 font-semibold text-gray-800">--</p>
+                        <p id="display-tourName" class="mt-0.5 font-semibold text-gray-800 text-base">--</p>
                     </div>
                 </div>
             </div>
 
-            <div class="content-box prose text-gray-600 text-sm leading-relaxed bg-slate-50 p-4 sm:p-5 rounded-lg border border-slate-200 space-y-2">
-                <p class="font-medium text-gray-900 mb-1">立切結書人（即旅客代表人），參加愛玩旅遊上述團體行程：</p>
+            <div class="content-box prose text-gray-700 bg-slate-50 p-4 sm:p-5 rounded-lg border border-slate-200 space-y-3">
+                <p class="font-bold text-gray-900 mb-1 text-base">立切結書人（即旅客代表人），參加愛玩旅遊上述團體行程：</p>
                 <p>茲因旅客個人因素，決定【自行攜帶並保管】出國所需之有效護照與簽證（護照效期需自出發日起算六個月以上）。</p>
                 <p>立切結書人承諾於出發當日準時抵達指定集合地點，並隨身攜帶上述證件。如因證件過期、損毀、遺漏或任何個人簽證資格問題導致無法成行、被拒絕登機或通關，其所衍生之一切取消費用、損失及法律責任，概由旅客自行負責，特立此書為憑。</p>
             </div>
 
-            <div class="content-box bg-amber-50/60 p-4 sm:p-5 rounded-lg border border-amber-200 text-sm leading-relaxed">
-                <h4 class="font-bold text-amber-800 flex items-center mb-2 sm:mb-3 text-sm sm:text-base">
+            <div class="content-box bg-amber-50/70 p-4 sm:p-5 rounded-lg border border-amber-200 leading-relaxed">
+                <h4 class="font-bold text-amber-800 flex items-center mb-2.5 text-base">
                     <span class="mr-1.5">⚠️</span> 【重要事項提醒】
                 </h4>
-                <p class="text-gray-700 font-medium mb-2">如您是屬於下列身分之旅客，敬請主動告知承辦人員，並務必確認證照內容：</p>
-                <ul class="space-y-2.5 text-gray-600 list-disc pl-4">
+                <p class="text-gray-800 font-semibold mb-2 text-sm sm:text-base">如您是屬於下列身分之旅客，敬請主動告知承辦人員，並務必確認證照內容：</p>
+                <ul class="space-y-2.5 text-gray-700 text-sm sm:text-base list-disc pl-5">
                     <li>
-                        <strong class="text-gray-950">【軍職人員、役男】</strong>：出境須申請並於護照上加蓋<span class="text-red-600 font-medium">「出境許可章」</span>，且需攜帶機關核准公文。
+                        <strong class="text-gray-950">【軍職人員、役男】</strong>：出境須申請並於護照上加蓋<span class="text-red-600 font-bold">「出境許可章」</span>，且需攜帶機關核准公文。
                     </li>
                     <li>
                         <strong class="text-gray-950">【剛退役者】</strong>：須先至有關機關修改身分證及護照上役別資料，否則會被限制出境。
@@ -104,37 +117,37 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label for="passengerName" class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
-                        <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2 text-base">
+                        <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2.5 text-base">
                     </div>
                     <div>
                         <label for="passengerPhone" class="block text-sm font-medium text-gray-700">聯絡電話 <span class="text-red-500">*</span></label>
-                        <input type="tel" id="passengerPhone" name="passengerPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2 text-base" placeholder="如：0912345678">
+                        <input type="tel" id="passengerPhone" name="passengerPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2.5 text-base" placeholder="如：0912345678">
                     </div>
                 </div>
 
                 <div>
                     <label for="clientEmail" class="block text-sm font-medium text-gray-700">電子信箱 (用於接收完成之 PDF) <span class="text-red-500">*</span></label>
-                    <input type="email" id="clientEmail" name="clientEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2 text-base" placeholder="example@gmail.com">
+                    <input type="email" id="clientEmail" name="clientEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2.5 text-base" placeholder="example@gmail.com">
                 </div>
 
                 <div>
                     <label for="companionNamesText" class="block text-sm font-medium text-gray-700">隨行旅客名單 (選填)</label>
-                    <input type="text" id="companionNamesText" name="companionNamesText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2 text-base" placeholder="多位請用逗號隔開。如：張三, 李四">
+                    <input type="text" id="companionNamesText" name="companionNamesText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2.5 text-base" placeholder="多位請用逗號隔開。如：張三, 李四">
                 </div>
             </div>
 
             <div class="content-box space-y-2">
-                <label class="block text-sm font-medium text-gray-700">旅客代表人親筆簽名區 <span class="text-red-500">*</span></label>
+                <label class="block text-base font-bold text-gray-800">旅客代表人親筆簽名區 <span class="text-red-500">*</span></label>
                 <div class="relative w-full">
-                    <canvas id="sig-canvas" height="400" class="w-full rounded-lg shadow-inner"></canvas>
+                    <canvas id="sig-canvas" height="600" class="w-full rounded-lg shadow-inner"></canvas>
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" id="sig-clearBtn" class="px-5 py-2.5 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-md transition active:bg-gray-300">清除重簽</button>
+                    <button type="button" id="sig-clearBtn" class="px-6 py-3 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition active:bg-gray-300">清除重簽</button>
                 </div>
             </div>
 
-            <div class="pt-2">
-                <button type="submit" id="submit-btn" class="w-full py-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 active:scale-[0.99]">
+            <div class="pt-4">
+                <button type="submit" id="submit-btn" class="w-full py-4.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-sky-500 active:scale-[0.99]">
                     本人確認已閱畢重要提醒，簽署並送出
                 </button>
             </div>
@@ -144,7 +157,6 @@
     <script>
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
 
-        // 1. 初始化頁面與填入網址參數
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const tId = urlParams.get('tourId') || '';
@@ -163,7 +175,6 @@
                 return;
             }
 
-            // 向 GAS 後端 API 發送 Fetch 請求拿取團體資料
             fetch(`${GAS_WEB_APP_URL}?action=getTour&tourId=${tourId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -181,11 +192,10 @@
                     document.getElementById('loading-status').innerText = `⚠️ 無法帶入團體資料：${err.message} (目前單機測試中屬正常現象)`;
                 });
             
-            // 初始化畫布尺寸
             resizeCanvas();
         });
 
-        // 2. 電子簽名畫布控制邏輯
+        // 電子簽名畫布控制邏輯
         const canvas = document.getElementById('sig-canvas');
         const ctx = canvas.getContext('2d');
         let drawing = false;
@@ -193,10 +203,10 @@
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width;
-            canvas.height = rect.height || 400; // 🎯 強制初始化實體像素高度為 400px
+            canvas.height = rect.height || 600; // 🎯 強制實體像素高度為 600px
             
             ctx.strokeStyle = "#0f172a"; 
-            ctx.lineWidth = 3.5; // 稍微加粗筆觸，讓大簽名板寫起來更自然
+            ctx.lineWidth = 4.0; // 因畫布加大，筆觸同步微調加粗到 4.0，寫起來更飽滿
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
         }
@@ -254,7 +264,6 @@
             return !buffer.some(color => color !== 0);
         }
 
-        // 3. 表單送出處理
         document.getElementById('sign-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -271,7 +280,7 @@
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
             submitBtn.innerText = "文件簽署提交中，請勿關閉視窗...";
-            submitBtn.className = "w-full py-4 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed text-center";
+            submitBtn.className = "w-full py-4.5 bg-gray-400 text-white font-bold rounded-lg shadow-md cursor-not-allowed text-center text-base";
 
             fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
@@ -297,7 +306,7 @@
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = false;
             submitBtn.innerText = "本人確認已閱畢重要提醒，簽署並送出";
-            submitBtn.className = "w-full py-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500";
+            submitBtn.className = "w-full py-4.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-lg";
         }
     </script>
 </body>
