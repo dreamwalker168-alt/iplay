@@ -91,7 +91,7 @@
     }
 
     /* ==========================================
-       🎯 終極優化：手機版左右完全貼邊，間隔縮到最小
+       🎯 終極優化：手機版左右完全歸零，極致滿版
        ========================================== */
     @media (max-width: 600px) { 
       body { 
@@ -112,17 +112,17 @@
         gap: 12px; 
       }  
       
-      /* 徹底打碎外層白底容器的任何間距 */
+      /* 解放第一層容器間距 */
       #contentWrapper { 
         border-radius: 0px !important;     
         border: none !important;           
         box-shadow: none !important;       
-        padding: 0px !important;           /* 歸零：消滅第一層白底大框空隙 */
+        padding: 0px !important;           
         margin: 0 !important;
         width: 100% !important;            
       }
       
-      /* 🎯 解決痛點 1 & 2：將子網頁內部的所有外殼、灰色卡片區塊完全強制滿版 */
+      /* 🎯 終極重砲：將內襯與外距直接下殺歸零（0px），讓灰色/藍色底色卡片完美貼死螢幕邊緣 */
       #contentWrapper div,
       #contentWrapper section,
       #contentWrapper .container, 
@@ -132,26 +132,40 @@
       #contentWrapper [class*="wrapper"],
       #contentWrapper [class*="card"],
       #contentWrapper [class*="content"] {
-        padding: 10px 8px !important;      /* 🎯 左右只留 8px，釋放所有卡片內部的文字空間 */
-        margin: 8px 0 !important;          /* 🎯 上下保留間距，左右外距歸零貼邊 */
+        padding: 12px 0px !important;      /* 🎯 左右襯距直接歸 0！文字與底色區塊橫向推到 100% 最極致 */
+        margin: 8px 0 !important;          
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        border-radius: 0px !important;     /* 手機版卡片取消圓角，使其完美貼邊延伸 */
-        border-left: none !important;      /* 拿掉左右邊框，爭取極致寬度 */
+        border-radius: 0px !important;     
+        border-left: none !important;      
         border-right: none !important;
       }
 
-      /* 確保子網頁內部的段落、表格、文字標籤也能完整伸展 */
+      /* 🎯 加碼保險：如果子網頁內的文字（如 p, span）有自己的小 padding，也強制貼邊 */
       #contentWrapper p,
+      #contentWrapper span,
+      #contentWrapper h1,
+      #contentWrapper h2,
+      #contentWrapper h3,
+      #contentWrapper h4,
+      #contentWrapper .text-block {
+        padding-left: 4px !important;     /* 僅保留極微小的4px，防止文字與外部捲軸完全重疊，其餘全部撐滿 */
+        padding-right: 4px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      /* 確保子網頁內部的表格、區塊也能完整伸展 */
       #contentWrapper table,
-      #contentWrapper td,
-      #contentWrapper span {
+      #contentWrapper td {
+        width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
+        padding: 4px 0px !important;      /* 表格內部左右也直接貼邊 */
       }
       
-      /* 確保子網頁內部寬度與襯距同步貼邊 */
+      /* 確保子網頁內部最底層架構同步滿版 */
       #contentWrapper html, 
       #contentWrapper body {
         padding: 0 !important;
