@@ -77,6 +77,25 @@
       overflow: visible !important; 
     }
 
+    /* 🎯 終極覆蓋：強制消除被 Fetch 進來的子網頁內部可能自帶的滾動條與固定高度限制 */
+    #contentWrapper html, 
+    #contentWrapper body {
+      overflow: visible !important;
+      height: auto !important;
+      min-height: unset !important;
+      max-height: unset !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+    }
+    #contentWrapper .container, 
+    #contentWrapper .wrapper,
+    #contentWrapper [class*="container"],
+    #contentWrapper [class*="wrapper"] {
+      height: auto !important;
+      overflow: visible !important;
+    }
+
     /* 🎯 當偵測到手機版 (螢幕小於 600px) */
     @media (max-width: 600px) { 
       body { 
@@ -99,8 +118,11 @@
         width: 100% !important;
       }
       
-      /* 🎯 終極修正：強制讓載入過來的 Canvas 簽名畫布撐開，大拇指非常好簽 */
-      #contentWrapper canvas {
+      /* 🎯 終極修正：無視子網頁原始寬高設定，強制讓手機版 Canvas 簽名畫布展開 */
+      #contentWrapper canvas,
+      #contentWrapper #sigCanvas,
+      #contentWrapper [id*="Canvas"],
+      #contentWrapper [class*="canvas"] {
         width: 100% !important;
         height: 320px !important; /* 強制釋放高度空間 */
       }
@@ -122,7 +144,7 @@
 </head>
 <body>
 
-<div id="loadingOverlay">正在安全載入專屬填單系統，請稍候...</div>
+<div id="loadingOverlay">正在安全載入專專屬填單系統，請稍候...</div>
 
 <div class="selector-container">
   <h2>愛玩旅遊 線上數位文件簽署中心</h2>
@@ -209,7 +231,6 @@
       });
   }
 
-  // 🎯 核心修改：使用 Fetch 讀取子網頁 HTML 內文並執行內部的 Script
   function onFormTypeChanged() {
     const targetHtmlFile = document.getElementById('formTypeSelect').value;
     const contentWrapper = document.getElementById('contentWrapper');
@@ -232,10 +253,10 @@
         document.getElementById('loadingOverlay').style.display = "none";
         contentWrapper.style.display = "block";
         
-        // 2. 將 HTML 內文塞入容器（這時原本子網頁的欄位和排版會直接融入主網頁）
+        // 2. 將 HTML 內文塞入容器
         contentWrapper.innerHTML = htmlText;
 
-        // 3. 關鍵突破：解析並動態執行子網頁裡的 JavaScript（如初始化畫布與綁定 GAS 功能）
+        // 3. 解析並動態執行子網頁裡的 JavaScript
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
         const scripts = doc.querySelectorAll('script');
@@ -250,7 +271,7 @@
           document.body.appendChild(newScript);
         });
 
-        // 4. 動態注入網址參數（原本透過 iframe 網址傳遞，現在直接掛載到全域 window 變數，讓子網頁腳本能直接抓到）
+        // 4. 動態注入網址參數
         window.urlParams = {
           tourId: selectedTourDetails.tourId,
           tourName: selectedTourDetails.tourName,
