@@ -34,10 +34,8 @@
         .contract-box p {
             margin-bottom: 0.75rem;
             text-align: justify;
-            text-indent: 2rem;
-        }
-        .contract-box p.no-indent {
-            text-indent: 0;
+            /* 💡 移除原先的 text-indent: 2rem，徹底防止段落首行被往右推 */
+            text-indent: 0; 
         }
         /* 變數強調樣式 */
         .db-field {
@@ -46,34 +44,36 @@
             background-color: #f0f9ff;
             padding: 2px 6px;
             border-radius: 4px;
-            border: 1px inline #bae6fd;
+            border: 1px solid #bae6fd;
             display: inline-block;
             text-indent: 0;
         }
 
-        /* 🎯 手機版極致優化：強制把左右內縮全部釋放，並把簽名板變大 */
+        /* 🎯 手機版極致優化 */
         @media (max-width: 600px) {
             body {
-                padding: 6px !important; /* 縮小網頁最外圈的留白 */
+                padding: 6px !important;
             }
             
-            /* 讓大卡片在手機上貼齊左右邊緣，釋放所有可讀寬度 */
             .main-card {
                 padding: 14px 10px !important;
                 border-radius: 8px !important;
             }
 
-            /* 縮小內部小區塊的間距 */
             .bg-slate-50, .bg-sky-50 {
                 padding: 12px 10px !important;
             }
 
-            /* 合約滾動箱內縮減少，讓條文更寬好閱讀 */
+            /* 合約滾動箱內縮減少，釋放兩側寬度 */
             .contract-box {
                 padding: 14px 10px !important;
             }
 
-            /* 🎯 簽名板區塊加大：提高高度到 280px，讓手指超好寫字 */
+            /* 💡 強制讓手機版內縮條款的左側空白縮減，避免文字擠壓 */
+            .contract-box .pl-8, .contract-box .pl-12 {
+                padding-left: 0.5rem !important;
+            }
+
             #sig-canvas {
                 height: 280px !important;
             }
@@ -118,8 +118,8 @@
             <div class="space-y-2">
                 <label class="block text-sm font-bold text-gray-950">契約合約完整條文（請向下滑動閱讀完整內容）</label>
                 <div class="contract-box rounded-lg text-gray-600">
-                    <p class="font-bold text-gray-900 no-indent mb-2">立契約書人</p>
-                    <p class="no-indent mb-4">旅客（以下稱甲方）與旅行業（以下稱乙方：皇朝國際旅行社股份有限公司/愛玩旅遊），甲乙雙方同意就本旅遊事項，依下列約定辦理。</p>
+                    <p class="font-bold text-gray-900 mb-2">立契約書人</p>
+                    <p class="mb-4">旅客（以下稱甲方）與旅行業（以下稱乙方：皇朝國際旅行社股份有限公司/愛玩旅遊），甲乙雙方同意就本旅遊事項，依下列約定辦理。</p>
                     
                     <h4>第一條（國外旅遊之意義）</h4>
                     <p>本契約所謂國外旅遊，係指到中華民國疆域以外其他國家或地區旅遊赴中國大陸旅行者，準用本旅遊契約之約定。</p>
@@ -128,21 +128,21 @@
                     <p>甲乙雙方關於本旅遊之權利義務，依本契約條款之約定定之；本契約中未約定者，適用中華民國有關法令之規定。</p>
 
                     <h4>第三條（旅遊團名稱、旅遊行程及廣告責任）</h4>
-                    <p>本旅遊團名稱為：<span id="field-tourName" class="db-field">載入中...</span></p>
-                    <p>旅遊地區（國家、城市或觀光地點）：<span id="field-tourDestination" class="db-field">載入中...</span></p>
-                    <p>行程（啟程出發地點、回程之終止地點、日期、交通工具、住宿旅館、餐飲、遊覽、安排購物行程及其所附隨之服務說明）：詳如附件</p>
+                    <p class="pl-4 md:pl-8">本旅遊團名稱為：<span id="field-tourName" class="db-field">載入中...</span></p>
+                    <p class="pl-4 md:pl-8">旅遊地區（國家、城市或觀光地點）：<span id="field-tourDestination" class="db-field">載入中...</span></p>
+                    <p class="pl-4 md:pl-8">行程（啟程出發地點、回程之終止地點、日期、交通工具、住宿旅館、餐飲、遊覽、安排購物行程及其所附隨之服務說明）：詳如附件</p>
                     <p>與本契約有關之附件、廣告、宣傳文件、行程表或說明會之說明內容均視為本契約內容之一部分。乙方應確保廣告內容之真實，對甲方所負之義務不得低於廣告之內容。</p>
                     <p>第一項記載得以所刊登之廣告、宣傳文件、行程表或說明會之說明內容代之。</p>
                     <p>未記載第一項內容或記載之內容與刊登廣告、宣傳文件、行程表或說明會之說明記載不符者，以最有利於甲方之內容為準。</p>
 
                     <h4>第四條（集合及出發時地）</h4>
-                    <p>甲方應於民國 <span id="field-tourAssembleTime" class="db-field">載入中...</span> 于 <span id="field-tourAssemblePlace" class="db-field">載入中...</span> 準時集合出發。甲方未準時到約定地點集合致未能出發，亦未能中途加入旅遊者，視為甲方任意解除契約，乙方得依第十三條之約定，行使損害賠償請求權。</p>
+                    <p class="pl-4 md:pl-8">甲方應於民國 <span id="field-tourAssembleTime" class="db-field">載入中...</span> 於 <span id="field-tourAssemblePlace" class="db-field">載入中...</span> 準時集合出發。甲方未準時到約定地點集合致未能出發，亦未能中途加入旅遊者，視為甲方任意解除契約，乙方得依第十三條之約定，行使損害賠償請求權。</p>
 
                     <h4>第五條（旅遊費用及付款方式）</h4>
-                    <p>旅遊費用：總計新台幣 <span id="field-tourFeeText" class="db-field">載入中...</span></p>
+                    <p class="pl-4 md:pl-8">旅遊費用：總計新台幣 <span id="field-tourFeeText" class="db-field">載入中...</span></p>
                     <p>除雙方有特別約定者外，甲方應依下列約定繳付：</p>
-                    <p>簽訂本契約時，甲方應繳付新臺幣 <span id="field-paymentAmount1" class="db-field">載入中...</span> 元。</p>
-                    <p class="no-indent pl-8">其餘款項於出發前三日或說明會時繳清。</p>
+                    <p class="pl-4 md:pl-8">簽訂本契約時，甲方應繳付新臺幣 <span id="field-paymentAmount1" class="db-field">載入中...</span> 元。</p>
+                    <p class="pl-4 md:pl-8">其餘款項於出發前三日或說明會時繳清。</p>
                     <p>前項之特別約定，除經雙方同意並增訂其他協議事項於本契約第三十七條，乙方不得以任何名義要求增加旅遊費用。</p>
 
                     <h4>第六條（旅客怠於給付旅遊費用之效力）</h4>
@@ -153,36 +153,36 @@
                     <p>旅遊開始後，乙方依前項規定終止契約時，甲方得請求乙方墊付費用將其送回原出發地。於到達後，由甲方附加年利率 5 ％利息償還乙方。</p>
 
                     <h4>第八條（旅遊費用所涵蓋之項目）</h4>
-                    <p>甲方依第五條約定繳納之旅遊費用，除雙方依第三十七條另有約定以外，應包括下列項目：</p>
-                    <p>一、代辦證件之行政規費：乙方代理甲方辦理出國所需之手續費及簽證費及其他規費。</p>
-                    <p>二、交通運輸費：旅程所需各種交通運輸之費用。</p>
-                    <p>三、餐飲費：旅程中所列應由乙方安排之餐飲費用。</p>
-                    <p>四、住宿費：旅程中所列住宿及旅館之費用，如甲方需要單人房，經乙方同意安排者，甲方應補繳所需差額。</p>
-                    <p>五、遊覽費用：旅程中所列之一切遊覽費用及入場門票費等。</p>
-                    <p>六、接送費：旅遊期間機場、港口、車站等與旅館間之一切接送費用。</p>
-                    <p>七、行李費：團體行李往返機場、港口、車站等與旅館間之一切接送費用及團體行李接送人員之小費，行李數量之重量依航空公司規定辦理。</p>
-                    <p>八、稅捐：各地機場服務稅捐及團體餐宿稅捐。</p>
-                    <p>九、服務費：領隊及其他乙方為甲方安排服務人員之報酬。</p>
-                    <p>十、保險費：責任保險及履約保證保險。</p>
+                    <p class="pl-4 md:pl-8">甲方依第五條約定繳納之旅遊費用，除雙方依第三十七條另有約定以外，應包括下列項目：</p>
+                    <p class="pl-6 md:pl-12">一、代辦證件之行政規費：乙方代理甲方辦理出國所需之手續費及簽證費及其他規費。</p>
+                    <p class="pl-6 md:pl-12">二、交通運輸費：旅程所需各種交通運輸之費用。</p>
+                    <p class="pl-6 md:pl-12">三、餐飲費：旅程中所列應由乙方安排之餐飲費用。</p>
+                    <p class="pl-6 md:pl-12">四、住宿費：旅程中所列住宿及旅館之費用，如甲方需要單人房，經乙方同意安排者，甲方應補繳所需差額。</p>
+                    <p class="pl-6 md:pl-12">五、遊覽費用：旅程中所列之一切遊覽費用及入場門票費等。</p>
+                    <p class="pl-6 md:pl-12">六、接送費：旅遊期間機場、港口、車站等與旅館間之一切接送費用。</p>
+                    <p class="pl-6 md:pl-12">七、行李費：團體行李往返機場、港口、車站等與旅館間之一切接送費用及團體行李接送人員之小費，行李數量之重量依航空公司規定辦理。</p>
+                    <p class="pl-6 md:pl-12">八、稅捐：各地機場服務稅捐及團體餐宿稅捐。</p>
+                    <p class="pl-6 md:pl-12">九、服務費：領隊及其他乙方為甲方安排服務人員之報酬。</p>
+                    <p class="pl-6 md:pl-12">十、保險費：責任保險及履約保證保險。</p>
                     <p>前項第二款交通運輸費及第五款遊覽費用，其費用於契約簽訂後經政府機關或經營管理業者公布調高或調低逾百分之十者，應由甲方補足，或由乙方退還。</p>
                     <p>第一項第二款至第五款之年長者門票減免、兒童住宿不佔床及各項優惠等，詳如附件（報價單）。如契約相關文件均未記載者，甲方得請求如實退還差額。</p>
 
                     <h4>第九條（旅遊費用所未涵蓋項目）</h4>
-                    <p class="no-indent pl-8">第五條之旅遊費用，除雙方依第三十七條另有約定者外，不包含下列項目：</p>
-                    <p class="no-indent pl-8">一、非本旅遊契約所列行程之一切費用。</p>
-                    <p class="no-indent pl-8">二、甲方之個人費用：如自費行程費用、行李超重費、飲料及酒類、洗衣、電話、網際網路使用費、私人交通費、行程外陪同購物之報酬、自由活動費、個人傷病醫療費、宜自行給與提供個人服務者（如旅館客房服務人員）之小費或尋回遺失物費用及報酬。</p>
-                    <p class="no-indent pl-8">三、未列入旅程之簽證、機票及其他有關費用。</p>
-                    <p class="no-indent pl-8">四、建議任意給予隨團領隊人員、當地導遊、司機之小費。</p>
-                    <p class="no-indent pl-8">五、保險費：甲方自行投保旅行平安保險之費用。</p>
-                    <p class="no-indent pl-8">六、其他由乙方代辦代收之費用。</p>
+                    <p class="pl-4 md:pl-8">第五條之旅遊費用，除雙方依第三十七條另有約定者外，不包含下列項目：</p>
+                    <p class="pl-6 md:pl-12">一、非本旅遊契約所列行程之一切費用。</p>
+                    <p class="pl-6 md:pl-12">二、甲方之個人費用：如自費行程費用、行李超重費、飲料及酒類、洗衣、電話、網際網路使用費、私人交通費、行程外陪同購物之報酬、自由活動費、個人傷病醫療費、宜自行給與提供個人服務者（如旅館客房服務人員）之小費或尋回遺失物費用及報酬。</p>
+                    <p class="pl-6 md:pl-12">三、未列入旅程之簽證、機票及其他有關費用。</p>
+                    <p class="pl-6 md:pl-12">四、建議任意給予隨團領隊人員、當地導遊、司機之小費。</p>
+                    <p class="pl-6 md:pl-12">五、保險費：甲方自行投保旅行平安保險之費用。</p>
+                    <p class="pl-6 md:pl-12">六、其他由乙方代辦代收之費用。</p>
                     <p>前項第二款、第四款建議給予之小費，乙方應於出發前，說明各觀光地區小費收取狀況及約略金額。</p>
 
                     <h4>第十條（組團旅遊最低人數）</h4>
-                    <p class="no-indent pl-8">本旅遊團須有 <span id="field-minTourPeople" class="db-field">載入中...</span> 人以上簽約參加始組成。如未達前定人數，乙方應於預訂出發之 七 日前(至少七日，如未記載時，視為七日)通知甲方解除契約；怠於通知致甲方受損害者，乙方應賠償甲方損害。</p>
+                    <p class="pl-4 md:pl-8">本旅遊團須有 <span id="field-minTourPeople" class="db-field">載入中...</span> 人以上簽約參加始組成。如未達前定人數，乙方應於預訂出發之 七 日前(至少七日，如未記載時，視為七日)通知甲方解除契約；怠於通知致甲方受損害者，乙方應賠償甲方損害。</p>
                     <p>前項組團人數如未記載者，視為無最低組團人數；其保證出團者，亦同。</p>
                     <p>乙方依第一項規定解除契約後，得依下列方式之一，返還或移作依第二款成立之新旅遊契約之旅遊費用：</p>
-                    <p class="no-indent pl-8">一、退還甲方已交付之全部費用。 But 乙方已代繳之行政規費得予扣除。</p>
-                    <p class="no-indent pl-8">二、徵得甲方同意，訂定另一旅遊契約，將依第一項解除契約應返還甲方之全部費用，移作該另訂之旅遊契約之費用全部或一部。如有超出之賸餘費用，應退還甲方。</p>
+                    <p class="pl-6 md:pl-12">一、退還甲方已交付之全部費用。但乙方已代繳之行政規費得予扣除。</p>
+                    <p class="pl-6 md:pl-12">二、徵得甲方同意，訂定另一旅遊契約，將依第一項解除契約應返還甲方之全部費用，移作該另訂之旅遊契約之費用全部或一部。如有超出之賸餘費用，應退還甲方。</p>
 
                     <h4>第十一條（代辦簽證、洽購機票）</h4>
                     <p>如確定所組團體能成行，乙方即應負責為甲方申辦護照及依旅程所需之簽證，並代訂妥機位及旅館。乙方應於預定出發七日前，或於舉行出國說明會時，將甲方之護照、簽證、機票、機位、旅館及其他必要事項向甲方報告，並以書面行程表確認之。乙方怠於履行上述義務時，甲方得拒絕形象或解除契約，乙方即應退還甲方所繳之所有費用。</p>
@@ -191,22 +191,22 @@
                     <h4>第十二條（因可歸責於旅行業之事由致無法成行）</h4>
                     <p>因可歸責於乙方之事由，致旅遊活動無法成行者，乙方於知悉旅遊活動無法成行時，應即通知甲方且說明其事由，並退還甲方已繳之旅遊費用。乙方怠於通知者，應賠償甲方依旅遊費用之全部計算之違約金。</p>
                     <p>乙方已為前項通知者，則按通知到達甲方時，距出發日期時間之長短，依下列規定計算其應賠償甲方之違約金：</p>
-                    <p class="no-indent pl-8">一、通知於出發日前第四十一日以前到達者，賠償旅遊費用百分之五。</p>
-                    <p class="no-indent pl-8">二、通知於出發日前第三十一日至第四十日以內到達者，賠償旅遊費用百分之十。</p>
-                    <p class="no-indent pl-8">三、通知於出發日前第二十一日至第三入日以內到達者，賠償旅遊費用百分之開十。</p>
-                    <p class="no-indent pl-8">四、通知於出發日前第二日至第二十日以內到達者，賠償旅遊費用百分之三十。</p>
-                    <p class="no-indent pl-8">五、通知於出發日前一日到達者，賠償旅遊費用百分之五十。</p>
-                    <p class="no-indent pl-8">六、通知於出發當日以後到達者，賠償旅遊費用百分之一百。</p>
+                    <p class="pl-6 md:pl-12">一、通知於出發日前第四十一日以前到達者，賠償旅遊費用百分之五。</p>
+                    <p class="pl-6 md:pl-12">二、通知於出發日前第三十一日至第四十日以內到達者，賠償旅遊費用百分之十。</p>
+                    <p class="pl-6 md:pl-12">三、通知於出發日前第二十一日至第三入日以內到達者，賠償旅遊費用百分之開十。</p>
+                    <p class="pl-6 md:pl-12">四、通知於出發日前第二日至第二十日以內到達者，賠償旅遊費用百分之三十。</p>
+                    <p class="pl-6 md:pl-12">五、通知於出發日前一日到達者，賠償旅遊費用百分之五十。</p>
+                    <p class="pl-6 md:pl-12">六、通知於出發當日以後到達者，賠償旅遊費用百分之一百。</p>
                     <p>甲方如能證明其所受損害超過前項各款基準者，得就其實際損害請求賠償。</p>
 
                     <h4>第十三條（出發前旅客任意解除契約及其責任）</h4>
                     <p>甲方於旅遊活動開始前解除契約者，應依乙方提供之收據，繳交行政規費，並應賠償乙方之損失，其賠償基準如下：</p>
-                    <p class="no-indent pl-8">一、旅遊開始前第四十一日以前解除契約者，賠償旅遊費用百分之五。</p>
-                    <p class="no-indent pl-8">二、旅遊開始前第三十一日至第四十日以內解除契約者，賠償旅遊費用百分之十。</p>
-                    <p class="no-indent pl-8">三、旅遊開始前第二十一日至第三十日以內解除契約者，賠償旅遊費用百分之二十。</p>
-                    <p class="no-indent pl-8">四、旅遊開始前第二日至第二十日以內解除契約者，賠償旅遊費用百分之三十。</p>
-                    <p class="no-indent pl-8">五、旅遊開始前一日解除契約者，賠償旅遊費用百分之五十。</p>
-                    <p class="no-indent pl-8">六、甲方於旅遊開始日或開始後解除契約或未通知不參加者，賠償旅遊費用百分之一百。</p>
+                    <p class="pl-6 md:pl-12">一、旅遊開始前第四十一日以前解除契約者，賠償旅遊費用百分之五。</p>
+                    <p class="pl-6 md:pl-12">二、旅遊開始前第三十一日至第四十日以內解除契約者，賠償旅遊費用百分之十。</p>
+                    <p class="pl-6 md:pl-12">三、旅遊開始前第二十一日至第三十日以內解除契約者，賠償旅遊費用百分之二十。</p>
+                    <p class="pl-6 md:pl-12">四、旅遊開始前第二日至第二十日以內解除契約者，賠償旅遊費用百分之三十。</p>
+                    <p class="pl-6 md:pl-12">五、旅遊開始前一日解除契約者，賠償旅遊費用百分之五十。</p>
+                    <p class="pl-6 md:pl-12">六、甲方於旅遊開始日或開始後解除契約或未通知不參加者，賠償旅遊費用百分之一百。</p>
                     <p>前項規定作為損害賠償計算基準之旅遊費用，應先扣除行政規費後計算之。</p>
                     <p>乙方如能證明其所受損害超過第一項之各款基準者，得就其實際損害請求賠償。</p>
 
@@ -230,8 +230,8 @@
                     <p>前二項旅遊證件，乙方及其受僱人應以善良管理人之注意保管之；甲方得隨時取回，乙方及其受僱人不得拒絕。</p>
 
                     <h4>第十八條（旅客之變更權）</h4>
-                    <p class="no-indent pl-8">甲方於旅遊開始 日前，因故不能參加旅遊者，得變更由第三人假裝參加旅遊。乙方非有正當理由，不得拒絕。</p>
-                    <p class="no-indent pl-8">前項情形，如因而增加費用，乙方得請求該變更後之第三人給付；如減少費用，甲方不得請求返還。甲方並應於接到乙方通知後 日內協同該第三人到乙方營業處所辦理契約承擔手續。</p>
+                    <p class="pl-4 md:pl-8">甲方於旅遊開始日前，因故不能參加旅遊者，得變更由第三人參加旅遊。乙方非有正當理由，不得拒絕。</p>
+                    <p class="pl-4 md:pl-8">前項情形，如因而增加費用，乙方得請求該變更後之第三人給付；如減少費用，甲方不得請求返還。甲方並應於接到乙方通知後日內協同該第三人到乙方營業處所辦理契約承擔手續。</p>
                     <p>承受本契約之第三人，與甲方雙方辦理承擔手續完畢起，承繼甲方基於本契約之一切權利義務。</p>
 
                     <h4>第十九條（旅行業務之轉讓）</h4>
@@ -290,17 +290,17 @@
 
                     <h4>第三十一條（旅行業應投保責任保險及履約保證保險）</h4>
                     <p>乙方應依主管機關之規定辦理責任保險及履約保證保險。責任保險投保金額：</p>
-                    <p class="no-indent pl-8">☑ 依法令規定。</p>
-                    <p class="no-indent pl-8">□ 高於法令規定，金額為：</p>
-                    <p class="no-indent pl-12">每一旅客意外死亡新臺幣__________元。</p>
-                    <p class="no-indent pl-12">每一旅客因意外事故所致體傷之醫療費用新臺幣____________元。</p>
-                    <p class="no-indent pl-12">國外旅遊善後處理費用新臺幣___________元。</p>
-                    <p class="no-indent pl-12">每一旅客證件遺失之損害賠償費用新臺幣____________元。</p>
+                    <p class="pl-4 md:pl-8">☑ 依法令規定。</p>
+                    <p class="pl-4 md:pl-8">□ 高於法令規定，金額為：</p>
+                    <p class="pl-6 md:pl-12">每一旅客意外死亡新臺幣__________元。</p>
+                    <p class="pl-6 md:pl-12">每一旅客因意外事故所致體傷之醫療費用新臺幣____________元。</p>
+                    <p class="pl-6 md:pl-12">國外旅遊善後處理費用新臺幣___________元。</p>
+                    <p class="pl-6 md:pl-12">每一旅客證件遺失之損害賠償費用新臺幣____________元。</p>
                     <p>乙方如未依前項規定投保者，於發生旅遊事故或不能履約之情形，應以主管機關規定最低投保金額計算其應理賠金額之三倍作為賠償金額。</p>
                     <p>乙方應於出團前，告知甲方有關投保旅行業責任保險之保險公司名稱及其連絡方式，以備甲方查詢。</p>
 
                     <h4>第三十二條（購物及瑕疵損害之處理方式）</h4>
-                    <p>為顧及旅客之購物方便，乙方如安排甲方購買禮品時，應於本契約第三條所列行程中預先載明。乙方不得於旅遊途中，臨時安排購物行程。 But 經甲方要求或同意者，不在此限。</p>
+                    <p>為顧及旅客之購物方便，乙方如安排甲方購買禮品時，應於本契約第三條所列行程中預先載明。乙方不得於旅遊途中，臨時安排購物行程。但經甲方要求或同意者，不在此限。</p>
                     <p>乙方安排特定場所購物，所購物品有貨價與品質不相當或瑕疪者，甲方得於受領所購物品後一個月內，請求乙方協助處理。</p>
                     <p>乙方不得以任何理由或名義要求甲方代為攜帶物品返國。</p>
 
@@ -309,28 +309,28 @@
 
                     <h4>第三十四條（消費爭議處理）</h4>
                     <p>本契約履約過程中發生爭議時，乙方應即主動與甲方協商解決之。</p>
-                    <p class="no-indent pl-8">乙方消費爭議處理申訴（客服）專線或電子信箱：02-8773-6060 / service@royal-travel.com</p>
+                    <p class="pl-4 md:pl-8">乙方消費爭議處理申訴（客服）專線或電子信箱：02-8773-6060 / service@royal-travel.com</p>
                     <p>乙方對甲方之消費爭議申訴，應於三個營業日內專人聯繫處理，並依據消費者保護法之規定，自申訴之日起十五日內妥適處理之。</p>
                     <p>雙方經協商後仍無法解決爭議時，甲方得向交通部觀光署、直轄市或各縣（市）消費者保護官、直轄市或各縣（市）消費者爭議調解委員會、中華民國旅行業品質保障協會或鄉（鎮、市、區）公所調解委員會提出調解（處）申請，乙方除有正當理由外，不得拒絕出席調解（處）會。</p>
 
                     <h4>第三十五條（個人資料之保護）</h4>
                     <p>乙方因履行本契約之需要，於代辦證件、安排交通工具、住宿、餐飲、遊覽及其所附隨服務之目的內，甲方同意乙方得依法規規定蒐集、處理、傳輸及利用其個人資料。</p>
-                    <p class="no-indent pl-8">甲方：</p>
-                    <p class="no-indent pl-12">□ 不同意（甲方如不同意，乙方將無法提供本契約之旅遊服務）。</p>
-                    <p class="no-indent pl-12">☑ 同意。</p>
-                    <p class="no-indent pl-12 text-xs text-sky-600 font-medium">（由系統後端根據網頁勾選紀錄自動填發認證）</p>
+                    <p class="pl-4 md:pl-8">甲方：</p>
+                    <p class="pl-6 md:pl-12">□ 不同意（甲方如不同意，乙方將無法提供本契約之旅遊服務）。</p>
+                    <p class="pl-6 md:pl-12">☑ 同意。</p>
+                    <p class="pl-6 md:pl-12 text-xs text-sky-600 font-medium">（由系統後端根據網頁勾選紀錄自動填發認證）</p>
                     <p>前項甲方之個人資料，乙方負有保密義務，非經甲方書面同意或依法規規定，不得將其個人資料提供予第三人。</p>
-                    <p>第一項甲方個人資料蒐集之特定目的消失或旅遊終了時，乙方應主動或依甲方之請求，刪除、停止處理或利用甲方個人資料。 But 因執行職務或業務所必須或經甲方書面同意者，不在此限。</p>
+                    <p>第一項甲方個人資料蒐集之特定目的消失或旅遊終了時，乙方應主動或依甲方之請求，刪除、停止處理或利用甲方個人資料。但因執行職務或業務所必須或經甲方書面同意者，不在此限。</p>
                     <p>乙方發現第一項甲方個人資料遭竊取、竄改、毀損、滅失或洩漏時，應即向主管機關通報，並立即查明發生原因及責任歸屬，且依實際狀況採取必要措施。</p>
                     <p>前項情形，乙方應以書面、簡訊或其他適當方式通知甲方，使其可得知悉各該事实及乙方已採取之處理措施、客服電話窗口等資訊。</p>
 
-                    <h4>第三十六條（約定合意管轄法院）</h4>
+                    <h4>開十六條（約定合意管轄法院）</h4>
                     <p>甲、乙雙方就本契約有關之爭議，以中華民國之法律為準據法。</p>
                     <p>因本契約發生訴訟時，甲乙雙方同意以台北地方法院為第一審管轄法院，但不得排除消費者保護法第四十七條或民事訴訟法第四百三十六條之九規定之小額訴訟管轄法院之適用。</p>
 
                     <h4>第三十七條（其他協議事項）</h4>
                     <p>甲乙雙方同意遵守下列各項：</p>
-                    <p class="no-indent pl-8">甲方 ☑ 同意 □ 不同意 乙方將其姓名提供給其他同團旅客。</p>
+                    <p class="pl-4 md:pl-8">甲方 ☑ 同意 □ 不同意 乙方將其姓名提供給其他同團旅客。</p>
                     <p>前項協議事項，如有變更本契約其他條款之規定，除經交通部觀光署核准，其約定無效，但有利於甲方者，不在此限。</p>
                 </div>
             </div>
@@ -412,7 +412,6 @@
     <script>
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
 
-        // 大廳變數接收邏輯與初始化頁面撈取團體基本資料
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const tourId = urlParams.get('tourId');
@@ -441,13 +440,6 @@
                         document.getElementById('field-tourFeeText').innerText = data.tourFeeText || '--';
                         document.getElementById('field-paymentAmount1').innerText = data.paymentAmount1 || '--';
                         document.getElementById('field-minTourPeople').innerText = data.minTourPeople || '--';
-                        
-                        if(document.getElementById('field-CHANGE_PASSENGER_DAYS')) {
-                            document.getElementById('field-CHANGE_PASSENGER_DAYS').innerText = data.CHANGE_PASSENGER_DAYS || '--';
-                        }
-                        if(document.getElementById('field-COOP_DAYS')) {
-                            document.getElementById('field-COOP_DAYS').innerText = data.COOP_DAYS || '--';
-                        }
 
                         const itineraryLink = document.getElementById('itinerary-link');
                         const itineraryText = document.getElementById('itinerary-tourName-text');
@@ -484,11 +476,10 @@
                 });
         });
 
-        // 2. 電子簽名畫布控制邏輯
         const canvas = document.getElementById('sig-canvas');
         const ctx = canvas.getContext('2d');
         let drawing = false;
-        let hasSigned = false; // 追蹤是否有簽名防止空白送出
+        let hasSigned = false;
 
         ctx.strokeStyle = "#0f172a"; 
         ctx.lineWidth = 3;
@@ -536,11 +527,9 @@
             hasSigned = false;
         });
 
-        // 3. 表單送出至 Google Apps Script 後端
         document.getElementById('sign-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // 驗證是否簽名
             if (!hasSigned) {
                 alert("請在簽名處區塊留下您的親筆手寫簽名後再行送出。");
                 return;
@@ -551,10 +540,8 @@
             submitBtn.innerText = "正在傳輸線上合約安全資料，請勿關閉視窗...";
             submitBtn.className = "w-full py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed";
 
-            // 取得簽名 Base64
             const signatureImage = canvas.toDataURL("image/png");
 
-            // 包裝欄位資料
             const formData = {
                 formType: document.getElementById('formType').value,
                 tourId: document.getElementById('tourId').value,
@@ -566,17 +553,15 @@
                 signature: signatureImage
             };
 
-            // 使用 POST 送出 JSON 到 GAS 後端
             fetch(GAS_WEB_APP_URL, {
                 method: "POST",
-                mode: "no-cors", // 配合 GAS 預設的特殊跨網域機制
+                mode: "no-cors",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(formData)
             })
             .then(() => {
-                // 因 no-cors 模式無法讀取回傳 JSON 狀態，但傳輸通常已成功，此處直接引導至成功畫面
                 document.querySelector('.main-card').innerHTML = `
                     <div class="text-center py-12 space-y-4">
                         <div class="text-6xl text-emerald-500">🎉</div>
