@@ -2,10 +2,12 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-color=1.0, user-scalable=no">
   <title>愛玩旅遊 - 線上數位簽署系統</title>
   <style>
-    /* 基礎樣式 */
+    /* ==========================================
+       基礎桌機版樣式
+       ========================================== */
     body { 
       font-family: "Microsoft JhengHei", sans-serif; 
       background-color: #f1f5f9; 
@@ -62,7 +64,7 @@
       box-shadow: 0 0 0 3px rgba(2,132,199,0.1); 
     }
     
-    /* 🎯 關鍵修正：拋棄 iframe，改用一般區塊容器 */
+    /* 條款內容平鋪容器 */
     #contentWrapper { 
       max-width: 800px; 
       margin: 0 auto; 
@@ -72,12 +74,11 @@
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
       background: #ffffff; 
       padding: 20px;
-      /* 關鍵：高度自動無限延伸，徹底消滅內捲軸 */
       height: auto !important; 
       overflow: visible !important; 
     }
 
-    /* 🎯 終極覆蓋：強制消除被 Fetch 進來的子網頁內部可能自帶的滾動條與固定高度限制 */
+    /* 終極覆蓋：強制消除被 Fetch 進來的子網頁自帶的滾動條與高度限制 */
     #contentWrapper html, 
     #contentWrapper body {
       overflow: visible !important;
@@ -96,35 +97,56 @@
       overflow: visible !important;
     }
 
-    /* 🎯 當偵測到手機版 (螢幕小於 600px) */
+    /* ==========================================
+       🎯 終極優化：手機版 (螢幕小於 600px) 左右空白歸零
+       ========================================== */
     @media (max-width: 600px) { 
       body { 
-        padding: 8px 4px !important; /* 釋放網頁兩側邊緣，方便閱讀 */
+        padding: 0 !important;             /* 1. 徹底拔除網頁最外圈的灰色大死白邊 */
+        background-color: #ffffff !important; /* 2. 背景改為全白，讓條文與外殼視覺一體化 */
       }
+      
       .selector-container { 
-        border-radius: 8px; 
-        padding: 14px 10px; 
+        border-radius: 0px !important;     /* 3. 選單取消圓角，直接貼邊填滿手機寬度 */
+        margin: 0 0 10px 0 !important;
+        padding: 12px 10px !important; 
+        border-left: none !important;
+        border-right: none !important;
       }
+      
       .grid-select { 
         grid-template-columns: 1fr; 
         gap: 12px; 
       }  
+      
+      /* 4. 徹底解放條文容器，消除左右外距與外框，橫向 100% 撐滿 */
       #contentWrapper { 
-        border-radius: 6px; 
-        border-left: none !important;
+        border-radius: 0px !important;     /* 拿掉圓角 */
+        border-left: none !important;      /* 拿掉左右邊框，擠出所有寬度 */
         border-right: none !important;
-        box-shadow: none !important;
-        padding: 12px 8px !important;
+        box-shadow: none !important;       /* 拿掉陰影 */
+        padding: 10px 8px !important;      /* 5. 內部襯距縮到最小(左右各留8px防貼字即可) */
+        margin: 0 !important;
+        width: 100% !important;            /* 強制滿版 */
+      }
+      
+      /* 6. 確保被載入進來的子網頁內部寬度與襯距同步歸零貼邊 */
+      #contentWrapper html, 
+      #contentWrapper body,
+      #contentWrapper .container,
+      #contentWrapper [class*="page-inside"] {
+        padding: 0 !important;
+        margin: 0 !important;
         width: 100% !important;
       }
       
-      /* 🎯 終極修正：無視子網頁原始寬高設定，強制讓手機版 Canvas 簽名畫布展開 */
+      /* 7. 針對手機版 Canvas 簽名畫布強制擴大至完美高度 */
       #contentWrapper canvas,
       #contentWrapper #sigCanvas,
       #contentWrapper [id*="Canvas"],
       #contentWrapper [class*="canvas"] {
         width: 100% !important;
-        height: 320px !important; /* 強制釋放高度空間 */
+        height: 320px !important;          /* 釋放高度，大拇指極佳書寫空間 */
       }
     }
 
@@ -144,7 +166,7 @@
 </head>
 <body>
 
-<div id="loadingOverlay">正在安全載入專專屬填單系統，請稍候...</div>
+<div id="loadingOverlay">正在安全載入專屬填單系統，請稍候...</div>
 
 <div class="selector-container">
   <h2>愛玩旅遊 線上數位文件簽署中心</h2>
@@ -198,7 +220,7 @@
     const contentWrapper = document.getElementById('contentWrapper');
     
     contentWrapper.style.display = "none";
-    contentWrapper.innerHTML = ""; // 清空舊內容
+    contentWrapper.innerHTML = ""; 
     formTypeSelect.value = "";
 
     if(!tourId) {
@@ -281,12 +303,4 @@
         // 5. 畫面流暢滾動至條款起點
         contentWrapper.scrollIntoView({ behavior: 'smooth' });
       })
-      .catch(err => {
-        document.getElementById('loadingOverlay').style.display = "none";
-        alert("載入條款文件失敗，請確認檔案是否存在。");
-      });
-  }
-</script>
-
-</body>
-</html>
+      .catch(err
