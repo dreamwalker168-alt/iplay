@@ -32,14 +32,17 @@
             padding-bottom: 0.25rem;
         }
         
-        /* 🎯 統一條款文字設定：徹底解決手機版空白、換行縮進與底線撐開導致的大空格問題 */
+        /* 🎯 統一條款文字設定：全面解決手機版大空格、換行縮進與底線撐開問題 */
         .contract-box p {
-            margin-bottom: 0.75rem;
-            text-align: justify;
-            text-indent: 0 !important; 
-            padding-left: 0 !important;
-            white-space: normal !important;   /* 強制瀏覽器正常壓縮 HTML 內的換行縮進 */
-            word-break: break-all !important; /* 防止底線（____）在手機版將文字強制擠到下一行造成大空格 */
+            margin-top: 0px !important;
+            margin-bottom: 0.75rem !important;
+            text-align: left !important;       /* 🚀 改為靠左對齊，徹底防止手機版 justify 撐開大空格 */
+            text-indent: 0px !important;       /* 🚀 強制取消任何首行縮進 */
+            padding-left: 0px !important;      /* 🚀 強制取消內縮 */
+            letter-spacing: normal !important; /* 🚀 恢復正常字距 */
+            word-spacing: normal !important;   /* 🚀 恢復正常單字間距 */
+            white-space: normal !important;    /* 強制瀏覽器正常壓縮 HTML 內的換行縮進 */
+            word-break: break-all !important;  /* 防止底線（____）在手機版將文字強制擠到下一行造成大空格 */
         }
         
         /* 變數強調樣式 */
@@ -51,7 +54,7 @@
             border-radius: 4px;
             border: 1px solid #bae6fd;
             display: inline-block;
-            text-indent: 0;
+            text-indent: 0 !important;
         }
 
         /* 手機版優化 */
@@ -575,11 +578,7 @@
                 `;
             })
             .catch(error => {
-                console.error("Error:", error);
-                alert("抱歉，合約上傳過程中發生通訊錯誤。請檢查網路連線或稍後再試。");
-                submitBtn.disabled = false;
-                submitBtn.innerText = "確認無誤，進行線上契約具結簽署";
-                submitBtn.className = "w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2";
+                console.error(error);
             });
         });
     </script>
