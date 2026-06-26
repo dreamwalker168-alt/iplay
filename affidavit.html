@@ -138,7 +138,7 @@
                         <strong class="text-gray-950">【軍職人員、役男】</strong>：出境須申請並於護照上加蓋<span class="text-red-600 font-bold">「出境許可章」</span>，且需攜帶機關核准公文。
                     </li>
                     <li>
-                        <strong class="text-gray-950">【剛退役者】</strong>：須先至有關機關修改身分證及護照上役別資料，否則會被限制出境。
+                        <strong class="text-gray-950">【剛退役者】</strong>：須先至有關機關修改身分證及護照上役別資料，否則會被限制出境.
                     </li>
                     <li>
                         <strong class="text-gray-950">【多重國籍】</strong>：進出中華民國國境須使用同一本護照；並需自行攜帶並備妥目的國簽證。
@@ -151,7 +151,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="for="passengerName" class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
+                        <label for="passengerName" class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
                         <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2.5 text-base">
                     </div>
                     <div>
@@ -250,14 +250,14 @@
         const ctx = canvas.getContext('2d');
         let drawing = false;
 
-        // 🎯 需求 2：動態初始化與調整高度（手機版設定寬高 1:1 正方形避免卡頓）
+        // 🎯 需求修正：固定手機版簽名畫布高度（300px），不再轉換為正方形，維持長方形空間
         function initCanvas() {
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width;
             
-            // 如果是手機版（小於 640px），高度改為跟寬度一樣，達成正方形。桌機版維持常規高度
+            // 如果是手機版（小於 640px），高度強制寫死 300px，確保大範圍且舒適的長方形簽名感
             if (window.innerWidth <= 640) {
-                canvas.height = rect.width; 
+                canvas.height = 300; 
             } else {
                 canvas.height = 320; 
             }
@@ -268,12 +268,11 @@
             ctx.lineJoin = "round";
         }
 
-        // 防抖動(Debounce)優化視窗調整事件，防止連續觸發重置畫布造成手機卡頓
+        // 防抖動(Debounce)優化視窗調整事件
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                // 僅在寬度真正改變時才重置，避免手機版瀏覽器因網址列收合觸發 resize 導致簽名不見或卡頓
                 const currentWidth = canvas.getBoundingClientRect().width;
                 if (canvas.width !== currentWidth) {
                     initCanvas();
@@ -281,7 +280,7 @@
             }, 200);
         });
 
-        // 多層內嵌框架下的滑動座標精確轉換
+        // 座標精確轉換
         function getTouchPos(e) {
             const rect = canvas.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -292,7 +291,7 @@
             };
         }
 
-        // 🎯 核心修正：優化觸控事件，使用最精簡的操作確保 100% 流暢不掉幀
+        // 優化觸控事件
         canvas.addEventListener('touchstart', (e) => {
             canvas.focus(); 
             drawing = true;
@@ -362,7 +361,6 @@
             .then(res => res.json())
             .then(data => {
                 if(data.status === 'success') {
-                    // 🎯 執行成功：切換至獨立完成畫面提示
                     showSuccessPage();
                 } else {
                     alert("提交失敗，原因：" + data.message);
@@ -371,13 +369,11 @@
             })
             .catch(err => {
                 console.error(err);
-                // 測試狀態或失敗時同樣可模擬導向成功頁面，或留在本頁。此處為了不卡在測試，直接跳到成功提示畫面
                 alert("提示：資料封包已封裝完成！(串接 GAS 成功後即可進行背景發信)。");
                 showSuccessPage();
             });
         });
 
-        // 🎯 需求 1 的處理函數：隱藏表單，顯示完成畫面
         function showSuccessPage() {
             document.getElementById('form-container').style.display = 'none';
             const successScreen = document.getElementById('success-screen');
