@@ -32,12 +32,14 @@
             padding-bottom: 0.25rem;
         }
         
-        /* 🎯 統一條款文字設定：徹底取消首行縮進與個別內縮 */
+        /* 🎯 統一條款文字設定：徹底解決手機版空白、換行縮進與底線撐開導致的大空格問題 */
         .contract-box p {
             margin-bottom: 0.75rem;
             text-align: justify;
             text-indent: 0 !important; 
             padding-left: 0 !important;
+            white-space: normal !important;   /* 強制瀏覽器正常壓縮 HTML 內的換行縮進 */
+            word-break: break-all !important; /* 防止底線（____）在手機版將文字強制擠到下一行造成大空格 */
         }
         
         /* 變數強調樣式 */
@@ -190,7 +192,7 @@
                     <p>乙方已為前項通知者，則按通知到達甲方時，距出發日期時間之長短，依下列規定計算其應賠償甲方之違約金：</p>
                     <p>一、通知於出發日前第四十一日以前到達者，賠償旅遊費用百分之五。</p>
                     <p>二、通知於出發日前第三十一日至第四十日以內到達者，賠償旅遊費用百分之十。</p>
-                    <p>三、通知於出發日前第二十一日至第三入日以內到達者，賠償旅遊費用百分之開十。</p>
+                    <p>三、通知於出發日前第二十一日至第三十日以內到達者，賠償旅遊費用百分之二十。</p>
                     <p>四、通知於出發日前第二日至第二十日以內到達者，賠償旅遊費用百分之三十。</p>
                     <p>五、通知於出發日前一日到達者，賠償旅遊費用百分之五十。</p>
                     <p>六、通知於出發當日以後到達者，賠償旅遊費用百分之一百。</p>
@@ -200,7 +202,7 @@
                     <p>甲方於旅遊活動開始前解除契約者，應依乙方提供之收據，繳交行政規費，並應賠償乙方之損失，其賠償基準如下：</p>
                     <p>一、旅遊開始前第四十一日以前解除契約者，賠償旅遊費用百分之五。</p>
                     <p>二、旅遊開始前第三十一日至第四十日以內解除契約者，賠償旅遊費用百分之十。</p>
-                    <p>三、旅遊開始前第二十一日至第三十日以內解除契約者，賠償旅遊費用百分之二十。</p>
+                    <p>三、旅遊開始前第二十一日至第三十日以內解除契約者，賠償旅遊費用百分之開十。</p>
                     <p>四、旅遊開始前第二日至第二十日以內解除契約者，賠償旅遊費用百分之三十。</p>
                     <p>五、旅遊開始前一日解除契約者，賠償旅遊費用百分之五十。</p>
                     <p>六、甲方於旅遊開始日或開始後解除契約或未通知不參加者，賠償旅遊費用百分之一百。</p>
@@ -227,7 +229,7 @@
                     <p>前二項旅遊證件，乙方及其受僱人應以善良管理人之注意保管之；甲方得隨時取回，乙方及其受僱人不得拒絕。</p>
 
                     <h4>第十八條（旅客之變更權）</h4>
-                    <p>甲方於旅遊開始日前，因故不能參加旅遊者，得變更由第三人參加旅遊。乙方非有正當理由，不得拒絕。</p>
+                    <p>甲方於旅遊開始日前，因故不能参加旅遊者，得變更由第三人参加旅遊。乙方非有正當理由，不得拒絕。</p>
                     <p>前項情形，如因而增加費用，乙方得請求該變更後之第三人給付；如減少費用，甲方不得請求返還。甲方並應於接到乙方通知後日內協同該第三人到乙方營業處所辦理契約承擔手續。</p>
                     <p>承受本契約之第三人，與甲方雙方辦理承擔手續完畢起，承記甲方基於本契約之一切權利義務。</p>
 
@@ -285,7 +287,7 @@
                     <p>甲方在旅遊中發生身體或財產上之事故時，乙方應盡善良管理人之注意為必要之協助及處理。</p>
                     <p>前項之事故，係因非可歸責於乙方之事由所致者，其所生之費用，由甲方負擔。</p>
 
-                    <h4>第三慢條（旅行業應投保責任保險及履約保證保險）</h4>
+                    <h4>第三十一條（旅行業應投保責任保險及履約保證保險）</h4>
                     <p>乙方應依主管機關之規定辦理責任保險及履約保證保險。責任保險投保金額：</p>
                     <p>☑ 依法令規定。</p>
                     <p>□ 高於法令規定，金額為：</p>
@@ -318,268 +320,4 @@
                     <p class="text-xs text-sky-600 font-medium">（由系統後端根據網頁勾選紀錄自動填發認證）</p>
                     <p>前項甲方之個人資料，乙方負有保密義務，非經甲方書面同意或依法規規定，不得將其個人資料提供予第三人。</p>
                     <p>第一項甲方個人資料蒐集之特定目的消失或旅遊終了時，乙方應主動或依甲方之請求，刪除、停止處理或利用甲方個人資料。但因執行職務或業務所必須或經甲方書面同意者，不在此限。</p>
-                    <p>乙方發現第一項甲方個人資料遭竊取、竄改、毀損、滅失或洩漏時，應即向主管機關通報，並立即查明發生原因及責任歸屬，且依實際狀況採取必要措施。</p>
-                    <p>前項情形，乙方應以書面、簡訊或其他適當方式通知甲方，使其可得知悉各該事实及乙方已採取之處理措施、客服電話窗口等資訊。</p>
-
-                    <h4>開十六條（約定合意管轄法院）</h4>
-                    <p>甲、乙雙方就本契約有關之爭議，以中華民國之法律為準據法。</p>
-                    <p>因本契約發生訴訟時，甲乙雙方同意以台北地方法院為第一審管轄法院，但不得排除消費者保護法第四十七條或民事訴訟法第四百三十六條之九規定之小額訴訟管轄法院之適用。</p>
-
-                    <h4>第三十七條（其他協議事項）</h4>
-                    <p>甲乙雙方同意遵守下列各項：</p>
-                    <p>甲方 ☑ 同意 □ 不同意 乙方將其姓名提供給其他同團旅客。</p>
-                    <p>前項協議事項，如有變更本契約其他條款之規定，除經交通部觀光署核准，其約定無效，但有利於甲方者，不在此限。</p>
-                </div>
-            </div>
-
-            <div id="itinerary-attachment" class="bg-sky-50 border border-sky-200 rounded-lg p-5 space-y-3">
-                <h3 class="font-semibold text-sky-900 text-base flex items-center">
-                    <span class="mr-2">📁</span> 本契約指定附件：團體旅遊行程表
-                </h3>
-                <p class="text-xs text-sky-700 leading-relaxed">
-                    依定型化契約第三條規定，本行程表內載明之景點、交通、每日住宿、餐食安排均為本契約之核心組件。請務必點擊下方連結確認您的專屬行程表內容：
-                </p>
-                <div class="pt-1">
-                    <a id="itinerary-link" href="#" target="_blank" class="inline-flex items-center px-4 py-2 bg-white border border-sky-300 rounded-md shadow-sm text-sm font-medium text-sky-700 hover:bg-sky-100 transition">
-                        <span class="mr-1.5">📄</span> <span id="itinerary-tourName-text">點此檢閱：線上正式附件行程表 (PDF)</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <h3 class="font-semibold text-gray-700 text-lg border-l-4 border-sky-50 pl-2">旅客代表人與合約資料填寫</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">旅客代表人姓名 <span class="text-red-500">*</span></label>
-                        <input type="text" id="passengerName" name="passengerName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">聯絡電話 <span class="text-red-500">*</span></label>
-                        <input type="tel" id="passengerPhone" name="passengerPhone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="如：0912345678">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">通訊地址 <span class="text-red-500">*</span></label>
-                    <input type="text" id="passengerAddress" name="passengerAddress" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫完整收件地址">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">電子信箱 (用於接收完成之 PDF 契約書) <span class="text-red-500">*</span></label>
-                    <input type="email" id="clientEmail" name="clientEmail" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="example@gmail.com">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">隨行旅客名單 (選填)</label>
-                    <p class="text-xs text-gray-400 mb-1">本人已取得以下全體隨行旅客之授權代為簽署本契約：</p>
-                    <input type="text" id="companionNamesText" name="companionNamesText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500 bg-white border p-2" placeholder="請填寫隨行同行人姓名。多位請用中文逗號分開，如：王小明，王大明">
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">旅客代表人親筆手寫簽名處 <span class="text-red-500">*</span></label>
-                <div class="relative w-full">
-                    <canvas id="sig-canvas" width="700" height="320" class="w-full rounded-lg shadow-inner"></canvas>
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button type="button" id="sig-clearBtn" class="px-3 py-1.5 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 rounded transition">清除重簽</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 p-4 rounded-lg text-sm text-gray-600 space-y-2">
-                <label class="flex items-start space-x-2">
-                    <input type="checkbox" required checked class="mt-1 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
-                    <span>本人確認已攜回審閱此契約書內容（含內文及附件旅遊行程表）至少一日，並充分理解且同意接受上述所有旅遊條款。</span>
-                </label>
-                <label class="flex items-start space-x-2">
-                    <input type="checkbox" required checked class="mt-1 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
-                    <span>【個人資料保護法】本人同意旅行社於代辦本次旅遊業務特定目的內蒐集、處理、傳輸及利用個人資料。</span>
-                </label>
-            </div>
-
-            <div class="pt-4 border-t border-gray-100">
-                <button type="submit" id="submit-btn" class="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
-                    確認無誤，進行線上契約具結簽署
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const tourId = urlParams.get('tourId');
-
-            if (!tourId) {
-                document.getElementById('loading-status').className = "bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-6 font-medium text-center";
-                document.getElementById('loading-status').innerText = "⚠️ 錯誤：網址未帶入有效的團體代號（tourId），契約表單無法正常作業。";
-                document.getElementById('submit-btn').disabled = true;
-                return;
-            }
-
-            document.getElementById('tourId').value = tourId;
-
-            fetch(`${GAS_WEB_APP_URL}?action=getTour&tourId=${tourId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === "success") {
-                        document.getElementById('display-tourId').innerText = data.tourId || '--';
-                        document.getElementById('display-tourDate').innerText = data.tourDate || '--';
-                        document.getElementById('display-tourName').innerText = data.tourName || '--';
-                        
-                        document.getElementById('field-tourName').innerText = data.tourName || '--';
-                        document.getElementById('field-tourDestination').innerText = data.tourDestination || '--';
-                        document.getElementById('field-tourAssembleTime').innerText = data.tourAssembleTime || '--';
-                        document.getElementById('field-tourAssemblePlace').innerText = data.tourAssemblePlace || '--';
-                        document.getElementById('field-tourFeeText').innerText = data.tourFeeText || '--';
-                        document.getElementById('field-paymentAmount1').innerText = data.paymentAmount1 || '--';
-                        document.getElementById('field-minTourPeople').innerText = data.minTourPeople || '--';
-
-                        const itineraryLink = document.getElementById('itinerary-link');
-                        const itineraryText = document.getElementById('itinerary-tourName-text');
-
-                        if(data.tourItineraryTable && data.tourItineraryTable.startsWith('http')) {
-                            let pdfUrl = data.tourItineraryTable.trim();
-                            if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
-                                pdfUrl = pdfUrl.split('/view')[0] + '/preview';
-                            }
-                            itineraryLink.href = pdfUrl;
-                            itineraryLink.target = "_blank";
-                            itineraryLink.className = "inline-flex items-center px-4 py-2 bg-white border border-sky-300 rounded-md shadow-sm text-sm font-medium text-sky-700 hover:bg-sky-100 transition cursor-pointer";
-                            itineraryText.innerText = `點此線上檢閱：${data.tourName || '本團'} - 官方行程表檔案`;
-                        } else if (data.tourItineraryTable && data.tourItineraryTable.trim() !== "") {
-                            itineraryLink.removeAttribute('href');
-                            itineraryLink.removeAttribute('target');
-                            itineraryLink.className = "inline-flex items-center px-4 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm font-medium text-gray-700 cursor-default";
-                            itineraryText.innerText = data.tourItineraryTable;
-                        } else {
-                            itineraryLink.href = "javascript:void(0);";
-                            itineraryLink.removeAttribute('target');
-                            itineraryLink.className = "inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-200 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed";
-                            itineraryText.innerText = "本團暫無提供附件行程表";
-                        }
-
-                        document.getElementById('loading-status').style.display = 'none';
-                    } else {
-                        throw new Error(data.message || "找不到該團行程資料");
-                    }
-                })
-                .catch(err => {
-                    document.getElementById('loading-status').className = "bg-red-50 text-red-700 p-3 rounded-lg text-sm mb-6 font-medium text-center";
-                    document.getElementById('loading-status').innerText = `⚠️ 載入失敗：${err.message || '無法連線到資料庫或找不到該團資料'}`;
-                });
-        });
-
-        const canvas = document.getElementById('sig-canvas');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-        let hasSigned = false;
-
-        ctx.strokeStyle = "#0f172a"; 
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
-
-        function getMousePos(canvasDom, touchOrMouseEvent) {
-            const rect = canvasDom.getBoundingClientRect();
-            const clientX = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientX : touchOrMouseEvent.clientX;
-            const clientY = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientY : touchOrMouseEvent.clientY;
-            return {
-                x: (clientX - rect.left) * (canvasDom.width / rect.width),
-                y: (clientY - rect.top) * (canvasDom.height / rect.height)
-            };
-        }
-
-        ['mousedown', 'touchstart'].forEach(eventName => {
-            canvas.addEventListener(eventName, (e) => {
-                drawing = true;
-                hasSigned = true;
-                const pos = getMousePos(canvas, e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-                e.preventDefault();
-            });
-        });
-
-        ['mousemove', 'touchmove'].forEach(eventName => {
-            canvas.addEventListener(eventName, (e) => {
-                if (!drawing) return;
-                const pos = getMousePos(canvas, e);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-                e.preventDefault();
-            });
-        });
-
-        ['mouseup', 'mouseleave', 'touchend'].forEach(eventName => {
-            canvas.addEventListener(eventName, () => {
-                drawing = false;
-            });
-        });
-
-        document.getElementById('sig-clearBtn').addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            hasSigned = false;
-        });
-
-        document.getElementById('sign-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (!hasSigned) {
-                alert("請在簽名處區塊留下您的親筆手寫簽名後再行送出。");
-                return;
-            }
-
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "正在傳輸線上合約安全資料，請勿關閉視窗...";
-            submitBtn.className = "w-full py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed";
-
-            const signatureImage = canvas.toDataURL("image/png");
-
-            const formData = {
-                formType: document.getElementById('formType').value,
-                tourId: document.getElementById('tourId').value,
-                passengerName: document.getElementById('passengerName').value,
-                passengerPhone: document.getElementById('passengerPhone').value,
-                passengerAddress: document.getElementById('passengerAddress').value,
-                clientEmail: document.getElementById('clientEmail').value,
-                companionNamesText: document.getElementById('companionNamesText').value,
-                signature: signatureImage
-            };
-
-            fetch(GAS_WEB_APP_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(() => {
-                document.querySelector('.main-card').innerHTML = `
-                    <div class="text-center py-12 space-y-4">
-                        <div class="text-6xl text-emerald-500">🎉</div>
-                        <h2 class="text-2xl font-bold text-gray-900">國外旅遊定型化契約 具結簽署成功</h2>
-                        <p class="text-gray-600 max-w-md mx-auto text-sm leading-relaxed">
-                            感謝您的配合！系統已安全紀錄您的電子簽章，並在背景自動產製正式法律效力之契約副本 PDF 檔案。該檔案將於數分鐘內寄送至您的信箱 <strong>${formData.clientEmail}</strong>，請注意查收。
-                        </p>
-                        <div class="pt-6">
-                            <button onclick="window.close();" class="px-6 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-900 text-sm transition shadow">關閉視窗</button>
-                        </div>
-                    </div>
-                `;
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("抱歉，合約上傳過程中發生通訊錯誤。請檢查網路連線或稍後再試。");
-                submitBtn.disabled = false;
-                submitBtn.innerText = "確認無誤，進行線上契約具結簽署";
-                submitBtn.className = "w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition";
-            });
-        });
-    </script>
-</body>
-</html>
+                    <p>乙方發現
