@@ -20,34 +20,70 @@
         /* 🎯 手機版極致撐開與破殼 */
         @media (max-width: 640px) {
             body {
-                padding: 4px 0px !important;
+                padding: 0px !important;
                 margin: 0px !important;
-                width: 100vw !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 overflow-x: hidden;
             }
             
+            /* 讓第一層主卡片完全貼邊歸零 */
             .main-card {
                 margin-left: 0px !important;
                 margin-right: 0px !important;
+                margin-top: 0px !important;
                 width: 100% !important;
-                padding-left: 10px !important;
-                padding-right: 10px !important;
+                max-width: 100% !important;
+                padding-left: 0px !important;  /* 🎯 左右卡片內襯歸零 */
+                padding-right: 0px !important; /* 🎯 左右卡片內襯歸零 */
                 border-radius: 0px !important;  /* 手機版不留圓角，直接貼邊 */
                 border-left: none !important;
                 border-right: none !important;
                 box-shadow: none !important;
             }
 
+            /* 🎯 核心修正：讓帶有灰色/藍色底色的卡片容器左右內襯完全歸零，寬度撐到 100% 最極致 */
             .content-box {
-                padding-left: 8px !important;
-                padding-right: 8px !important;
+                padding-left: 0px !important;   /* 🎯 內部灰色/黃色區塊的左右襯距直接歸零 */
+                padding-right: 0px !important;  /* 🎯 內部灰色/黃色區塊的左右襯距直接歸零 */
                 margin-left: 0px !important;
                 margin-right: 0px !important;
+                border-radius: 0px !important;  /* 底色方塊取消圓角以完美滿版 */
+                border-left: none !important;   /* 移除左邊框防干擾 */
+                border-right: none !important;  /* 移除右邊框防干擾 */
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* 🎯 確保容器內部的真正文字、標題及表單元素左右留微小4px安全間距，不與最外層捲軸黏死，但底色完全滿版 */
+            .content-box h3,
+            .content-box h4,
+            .content-box div,
+            .content-box p,
+            .content-box ul,
+            .content-box li,
+            .content-box strong,
+            form .content-box > label {
+                padding-left: 6px !important;  
+                padding-right: 6px !important;
+            }
+
+            form {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* 標題與按鈕區塊微調貼邊 */
+            .text-center.border-b,
+            form > div:not(.content-box) {
+                padding-left: 6px !important;
+                padding-right: 6px !important;
             }
             
             .prose p {
                 font-size: 15px !important;
                 line-height: 1.6 !important;
+                text-align: justify; /* 文字左右對齊，排版更飽滿 */
             }
         }
     </style>
@@ -225,7 +261,7 @@
 
         // 🎯 核心修正 3：加入強制聚焦與嚴格事件捕獲，100% 阻斷外層框架捲軸干擾
         canvas.addEventListener('touchstart', (e) => {
-            canvas.focus(); // 🚀 觸碰瞬間強制讓畫布取得焦點，不用先點擊別處
+            canvas.focus(); // 🚀 觸碰瞬間強制讓畫布取得焦點
             drawing = true;
             const pos = getTouchPos(e);
             ctx.beginPath();
