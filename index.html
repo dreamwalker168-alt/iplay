@@ -91,20 +91,26 @@
     }
 
     /* ==========================================
-       🎯 手機版左右完全歸零，極致滿版
+       🎯 手機版左右完全歸零，終極極致滿版
        ========================================== */
     @media (max-width: 600px) { 
       body { 
         padding: 0 !important;             
+        margin: 0 !important;
         background-color: #ffffff !important; 
+        width: 100% !important;
+        overflow-x: hidden; /* 防止任何子元件不小心溢出產生橫向滾動條 */
       }
       
+      /* 第一步、第二步的選單容器：徹底打平貼死 */
       .selector-container { 
         border-radius: 0px !important;     
         margin: 0 0 10px 0 !important;
-        padding: 12px 10px !important; 
-        border-left: none !important;
-        border-right: none !important;
+        padding: 15px 12px !important; /* 上下保留舒適距離，左右適度留白讓選單好點擊 */
+        border: none !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        box-shadow: none !important; /* 滿版時拿掉陰影更乾淨 */
       }
       
       .grid-select { 
@@ -112,17 +118,21 @@
         gap: 12px; 
       }  
       
-      /* 解放第一層容器間距 */
+      /* 下方內嵌條款文件容器：徹底打平 */
       #contentWrapper { 
         border-radius: 0px !important;     
         border: none !important;           
         box-shadow: none !important;       
-        padding: 0px !important;           
+        padding: 0px !important; /* 主容器內襯完全歸 0 */          
         margin: 0 !important;
         width: 100% !important;            
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
       
-      /* 讓灰色/藍色底色卡片完美貼死螢幕邊緣 */
+      /* 🎯 關鍵修正：強行破除子網頁帶進來的所有外層包覆區塊的外距(Margin)與內襯(Padding) */
+      #contentWrapper html,
+      #contentWrapper body,
       #contentWrapper div,
       #contentWrapper section,
       #contentWrapper .container, 
@@ -132,54 +142,53 @@
       #contentWrapper [class*="wrapper"],
       #contentWrapper [class*="card"],
       #contentWrapper [class*="content"] {
-        padding: 12px 0px !important;      /* 左右襯距直接歸 0！文字與底色區塊橫向推到 100% 最極致 */
-        margin: 8px 0 !important;          
+        padding: 0px !important;   /* 左右內襯直接強制歸 0，消除白邊 */
+        margin: 0px !important;    /* 消除所有卡片自帶的外距 */
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
         border-radius: 0px !important;     
-        border-left: none !important;      
-        border-right: none !important;
+        border: none !important;
       }
 
-      /* 防止文字與外部捲軸完全重疊，僅保留微小 4px */
+      /* 🎯 為了避免文字直接貼死螢幕玻璃，只針對純文字標籤與表格內部給予微幅的左右內襯 */
       #contentWrapper p,
       #contentWrapper span,
       #contentWrapper h1,
       #contentWrapper h2,
       #contentWrapper h3,
       #contentWrapper h4,
+      #contentWrapper li,
       #contentWrapper .text-block {
-        padding-left: 4px !important;     
-        padding-right: 4px !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        padding-left: 14px !important;     
+        padding-right: 14px !important;
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+        box-sizing: border-box !important;
       }
 
-      /* 確保子網頁內部的表格、區塊也能完整伸展 */
-      #contentWrapper table,
-      #contentWrapper td {
+      /* 確保子網頁內部的表格、合約條款區塊也能完整橫向伸展 */
+      #contentWrapper table {
         width: 100% !important;
         max-width: 100% !important;
+        margin: 10px 0 !important;
         box-sizing: border-box !important;
-        padding: 4px 0px !important;      
       }
       
-      /* 確保子網頁內部最底層架構同步滿版 */
-      #contentWrapper html, 
-      #contentWrapper body {
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
+      #contentWrapper td,
+      #contentWrapper th {
+        padding: 8px !important; /* 表格內部格線留點空間比較好閱讀 */
       }
       
-      /* 手機版 Canvas 簽名畫布強制擴大 */
+      /* 手機版 Canvas 簽名畫布強制擴大，左右留下一點點安全簽名邊距 */
       #contentWrapper canvas,
       #contentWrapper #sigCanvas,
       #contentWrapper [id*="Canvas"],
       #contentWrapper [class*="canvas"] {
-        width: 100% !important;
-        height: 320px !important;          
+        width: calc(100% - 20px) !important;
+        margin: 10px auto !important;
+        display: block !important;
+        height: 280px !important;          
       }
     }
 
@@ -307,16 +316,19 @@
         document.getElementById('loadingOverlay').style.display = "none";
         contentWrapper.style.display = "block";
         
+        // 先放入 HTML 結構
         contentWrapper.innerHTML = htmlText;
 
-        // 🎯 關鍵連動修正：將模擬的參數注入全域物件中
+        // 🎯 關鍵連動修正：建立模擬的 URL 參數字串
+        const mockQueryString = `?tourId=${encodeURIComponent(selectedTourDetails.tourId)}&tourName=${encodeURIComponent(selectedTourDetails.tourName)}&tourDate=${encodeURIComponent(selectedTourDetails.tourDate)}`;
+        
         window.urlParams = {
           tourId: selectedTourDetails.tourId,
           tourName: selectedTourDetails.tourName,
           tourDate: selectedTourDetails.tourDate
         };
 
-        // 執行子網頁腳本
+        // 解析並執行子網頁腳本
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
         const scripts = doc.querySelectorAll('script');
@@ -326,67 +338,73 @@
           if (oldScript.src) {
             newScript.src = oldScript.src;
           } else {
-            // 🎯 核心修正：將子網頁中原本抓 `window.location.search` 的邏輯，在執行時強制導向 index 提供的全域參數！
             let code = oldScript.textContent;
             
-            // 完美防護：即使子網頁有用 window.addEventListener('DOMContentLoaded')，在此平鋪環境下也強制直接觸發裡面的函式
-            code = code.replace(/window\.addEventListener\s*\(\s*['"]DOMContentLoaded['"]\s*,/g, '$(document).ready(');
+            // 🎯 核心修正 1：完美替換 window.location.search，讓子網頁原有的 URLSearchParams 邏輯能直接取到資料
+            code = code.replace(/window\.location\.search/g, `"${mockQueryString}"`);
+            
+            // 🎯 核心修正 2：移除或替換原本會出錯的 $(document).ready，改成直接執行的封閉區塊防止全域污染
+            code = code.replace(/window\.addEventListener\s*\(\s*['"]DOMContentLoaded['"]\s*,\s*function\s*\(\s*\)\s*\{/g, '{');
+            code = code.replace(/window\.addEventListener\s*\(\s*['"]DOMContentLoaded['"]\s*,\s*\(\s*\)\s*=>\s*\{/g, '{');
             
             newScript.textContent = code;
           }
-          document.body.appendChild(newScript);
+          // 🎯 核心修正 3：將腳本加入到 contentWrapper 內，這樣更換文件時才會被一併清空
+          contentWrapper.appendChild(newScript);
         });
 
-        // 🎯 核心修正：子網頁載入後，直接在 index 這一層強制觸發子網頁的資料填充邏輯，確保變數正確塞入網頁欄位
-        if (typeof (injectTourDataToFields) === "function") {
-             injectTourDataToFields(selectedTourDetails);
+        // 🎯 核心修正 4：子網頁載入後，強制觸發資料填充邏輯
+        if (typeof injectTourDataToFields === "function") {
+          injectTourDataToFields(selectedTourDetails);
         } else {
-            // 備用機制：如果子網頁沒有獨立出函式，手動幫忙把資料塞入對應的 field
-            setTimeout(() => {
-                if(document.getElementById('tourId')) document.getElementById('tourId').value = selectedTourDetails.tourId || '';
-                if(document.getElementById('display-tourId')) document.getElementById('display-tourId').innerText = selectedTourDetails.tourId || '--';
-                if(document.getElementById('display-tourDate')) document.getElementById('display-tourDate').innerText = selectedTourDetails.tourDate || '--';
-                if(document.getElementById('display-tourName')) document.getElementById('display-tourName').innerText = selectedTourDetails.tourName || '--';
-                if(document.getElementById('field-tourName')) document.getElementById('field-tourName').innerText = selectedTourDetails.tourName || '--';
-                if(document.getElementById('field-tourDestination')) document.getElementById('field-tourDestination').innerText = selectedTourDetails.tourDestination || '--';
-                if(document.getElementById('field-tourAssembleTime')) document.getElementById('field-tourAssembleTime').innerText = selectedTourDetails.tourAssembleTime || '--';
-                if(document.getElementById('field-tourAssemblePlace')) document.getElementById('field-tourAssemblePlace').innerText = selectedTourDetails.tourAssemblePlace || '--';
-                if(document.getElementById('field-tourFeeText')) document.getElementById('field-tourFeeText').innerText = selectedTourDetails.tourFeeText || '--';
-                if(document.getElementById('field-paymentAmount1')) document.getElementById('field-paymentAmount1').innerText = selectedTourDetails.paymentAmount1 || '--';
-                if(document.getElementById('field-minTourPeople')) document.getElementById('field-minTourPeople').innerText = selectedTourDetails.minTourPeople || '--';
-                
-                // 處理行程表連結
-                const itineraryLink = document.getElementById('itinerary-link');
-                const itineraryText = document.getElementById('itinerary-tourName-text');
-                if (itineraryLink && itineraryText) {
-                    if(selectedTourDetails.tourItineraryTable && selectedTourDetails.tourItineraryTable.startsWith('http')) {
-                        let pdfUrl = selectedTourDetails.tourItineraryTable.trim();
-                        if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
-                            pdfUrl = pdfUrl.split('/view')[0] + '/preview';
-                        }
-                        itineraryLink.href = pdfUrl;
-                        itineraryLink.target = "_blank";
-                        itineraryText.innerText = `點此線上檢閱：${selectedTourDetails.tourName || '本團'} - 官方行程表檔案`;
-                    } else if (selectedTourDetails.tourItineraryTable) {
-                        itineraryLink.removeAttribute('href');
-                        itineraryText.innerText = selectedTourDetails.tourItineraryTable;
+          // 備用機制：適度拉長延遲至 300ms 確保 DOM 完全生成
+          setTimeout(() => {
+            if(document.getElementById('tourId')) document.getElementById('tourId').value = selectedTourDetails.tourId || '';
+            if(document.getElementById('display-tourId')) document.getElementById('display-tourId').innerText = selectedTourDetails.tourId || '--';
+            if(document.getElementById('display-tourDate')) document.getElementById('display-tourDate').innerText = selectedTourDetails.tourDate || '--';
+            if(document.getElementById('display-tourName')) document.getElementById('display-tourName').innerText = selectedTourDetails.tourName || '--';
+            if(document.getElementById('field-tourName')) document.getElementById('field-tourName').innerText = selectedTourDetails.tourName || '--';
+            if(document.getElementById('field-tourDestination')) document.getElementById('field-tourDestination').innerText = selectedTourDetails.tourDestination || '--';
+            if(document.getElementById('field-tourAssembleTime')) document.getElementById('field-tourAssembleTime').innerText = selectedTourDetails.tourAssembleTime || '--';
+            if(document.getElementById('field-tourAssemblePlace')) document.getElementById('field-tourAssemblePlace').innerText = selectedTourDetails.tourAssemblePlace || '--';
+            if(document.getElementById('field-tourFeeText')) document.getElementById('field-tourFeeText').innerText = selectedTourDetails.tourFeeText || '--';
+            if(document.getElementById('field-paymentAmount1')) document.getElementById('field-paymentAmount1').innerText = selectedTourDetails.paymentAmount1 || '--';
+            if(document.getElementById('field-minTourPeople')) document.getElementById('field-minTourPeople').innerText = selectedTourDetails.minTourPeople || '--';
+            
+            // 處理行程表連結
+            const itineraryLink = document.getElementById('itinerary-link');
+            const itineraryText = document.getElementById('itinerary-tourName-text');
+            if (itineraryLink && itineraryText) {
+                if(selectedTourDetails.tourItineraryTable && selectedTourDetails.tourItineraryTable.startsWith('http')) {
+                    let pdfUrl = selectedTourDetails.tourItineraryTable.trim();
+                    if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
+                        pdfUrl = pdfUrl.split('/view')[0] + '/preview';
                     }
+                    itineraryLink.href = pdfUrl;
+                    itineraryLink.target = "_blank";
+                    itineraryText.innerText = `點此線上檢閱：${selectedTourDetails.tourName || '本團'} - 官方行程表檔案`;
+                } else if (selectedTourDetails.tourItineraryTable) {
+                    itineraryLink.removeAttribute('href');
+                    itineraryText.innerText = selectedTourDetails.tourItineraryTable;
                 }
-                
-                // 隱藏子網頁內建的獨立載入提示（因為現在由主頁面負責）
-                const subLoading = document.getElementById('loading-status');
-                if(subLoading) subLoading.style.display = 'none';
-            }, 100);
+            }
+            
+            // 隱藏子網頁內建的獨立載入提示
+            const subLoading = document.getElementById('loading-status');
+            if(subLoading) subLoading.style.display = 'none';
+          }, 300);
         }
 
         contentWrapper.scrollIntoView({ behavior: 'smooth' });
       })
       .catch(err => {
         document.getElementById('loadingOverlay').style.display = "none";
+        console.error(err);
         alert("載入條款文件失敗，請確認檔案是否存在。");
       });
   }
 </script>
 
 </body>
+</html>
 </html>
