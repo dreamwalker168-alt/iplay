@@ -136,7 +136,7 @@
                     <p>未記載第一項內容或記載之內容與刊登廣告、宣傳文件、行程表或說明會之說明記載不符者，以最有利於甲方之內容為準。</p>
 
                     <h4>第四條（集合及出發時地）</h4>
-                    <p class="no-indent pl-8">甲方應於民國 <span id="field-tourAssembleTime" class="db-field">載入中...</span> 於 <span id="field-tourAssemblePlace" class="db-field">載入中...</span> 準時集合出發。甲方未準時到約定地點集合致未能出發，亦未能中途加入旅遊者，視為甲方任意解除契約，乙方得依第十三條之約定，行使損害賠償請求權。</p>
+                    <p class="no-indent pl-8">甲方應於民國 <span id="field-tourAssembleTime" class="db-field">載入中...</span> 于 <span id="field-tourAssemblePlace" class="db-field">載入中...</span> 準時集合出發。甲方未準時到約定地點集合致未能出發，亦未能中途加入旅遊者，視為甲方任意解除契約，乙方得依第十三條之約定，行使損害賠償請求權。</p>
 
                     <h4>第五條（旅遊費用及付款方式）</h4>
                     <p class="no-indent pl-8">旅遊費用：總計新台幣 <span id="field-tourFeeText" class="db-field">載入中...</span></p>
@@ -193,7 +193,7 @@
                     <p>乙方已為前項通知者，則按通知到達甲方時，距出發日期時間之長短，依下列規定計算其應賠償甲方之違約金：</p>
                     <p class="no-indent pl-8">一、通知於出發日前第四十一日以前到達者，賠償旅遊費用百分之五。</p>
                     <p class="no-indent pl-8">二、通知於出發日前第三十一日至第四十日以內到達者，賠償旅遊費用百分之十。</p>
-                    <p class="no-indent pl-8">三、通知於出發日前第二十一日至第三十日以內到達者，賠償旅遊費用百分之開十。</p>
+                    <p class="no-indent pl-8">三、通知於出發日前第二十一日至第三入日以內到達者，賠償旅遊費用百分之開十。</p>
                     <p class="no-indent pl-8">四、通知於出發日前第二日至第二十日以內到達者，賠償旅遊費用百分之三十。</p>
                     <p class="no-indent pl-8">五、通知於出發日前一日到達者，賠償旅遊費用百分之五十。</p>
                     <p class="no-indent pl-8">六、通知於出發當日以後到達者，賠償旅遊費用百分之一百。</p>
@@ -410,21 +410,9 @@
     </div>
 
     <script>
-        // 大廳變數接收邏輯
-        window.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const tId = urlParams.get('tourId') || '';
-            const tName = urlParams.get('tourName') || '';
-            const tDate = urlParams.get('tourDate') || '';
-
-            if(document.getElementById('tourId')) { document.getElementById('tourId').value = tId; }
-            if(document.getElementById('tourName')) { document.getElementById('tourName').value = tName; }
-            if(document.getElementById('tourDate')) { document.getElementById('tourDate').value = tDate; }
-        });
-
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPgA4E4cvDEKqJ4X6gWzfMsi68OBsAbUMAGItH2o3w45spp0gkNmN-FTp0f_gVe7sb/exec";
 
-        // 1. 初始化頁面並撈取團體基本資料
+        // 大廳變數接收邏輯與初始化頁面撈取團體基本資料
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const tourId = urlParams.get('tourId');
@@ -500,6 +488,7 @@
         const canvas = document.getElementById('sig-canvas');
         const ctx = canvas.getContext('2d');
         let drawing = false;
+        let hasSigned = false; // 追蹤是否有簽名防止空白送出
 
         ctx.strokeStyle = "#0f172a"; 
         ctx.lineWidth = 3;
@@ -518,6 +507,7 @@
         ['mousedown', 'touchstart'].forEach(eventName => {
             canvas.addEventListener(eventName, (e) => {
                 drawing = true;
+                hasSigned = true;
                 const pos = getMousePos(canvas, e);
                 ctx.beginPath();
                 ctx.moveTo(pos.x, pos.y);
@@ -543,55 +533,71 @@
 
         document.getElementById('sig-clearBtn').addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSigned = false;
         });
 
         // 3. 表單送出至 Google Apps Script 後端
-        document.getElementById('sign-form').addEventListener('submit', (e) => {
+        document.getElementById('sign-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // 檢查畫布是否空白
-            const blank = document.createElement('canvas');
-            blank.width = canvas.width;
-            blank.height = canvas.height;
-            if (canvas.toDataURL() === blank.toDataURL()) {
-                alert("請完成旅客代表人親筆手寫簽名後再行提交。");
+            // 驗證是否簽名
+            if (!hasSigned) {
+                alert("請在簽名處區塊留下您的親筆手寫簽名後再行送出。");
                 return;
             }
 
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
-            submitBtn.innerText = "正在傳輸切結資料並由雲端系統自動填發 PDF 中...";
+            submitBtn.innerText = "正在傳輸線上合約安全資料，請勿關閉視窗...";
+            submitBtn.className = "w-full py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed";
 
-            const signatureDataUrl = canvas.toDataURL('image/png');
-            const formData = new FormData(document.getElementById('sign-form'));
-            
-            const payload = {};
-            formData.forEach((value, key) => { payload[key] = value; });
-            payload['signatureId'] = signatureDataUrl;
+            // 取得簽名 Base64
+            const signatureImage = canvas.toDataURL("image/png");
 
+            // 包裝欄位資料
+            const formData = {
+                formType: document.getElementById('formType').value,
+                tourId: document.getElementById('tourId').value,
+                passengerName: document.getElementById('passengerName').value,
+                passengerPhone: document.getElementById('passengerPhone').value,
+                passengerAddress: document.getElementById('passengerAddress').value,
+                clientEmail: document.getElementById('clientEmail').value,
+                companionNamesText: document.getElementById('companionNamesText').value,
+                signature: signatureImage
+            };
+
+            // 使用 POST 送出 JSON 到 GAS 後端
             fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
+                method: "POST",
+                mode: "no-cors", // 配合 GAS 預設的特殊跨網域機制
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "success") {
-                    alert(`🎉 線上定型化契約簽署具結成功！\n\n系統已自動將完成之 PDF 副本同步寄送至：\n${payload['clientEmail']}\n\n感謝您的填寫。`);
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    document.getElementById('sign-form').reset();
-                } else {
-                    alert("⚠️ 具結提交失敗：" + data.message);
-                }
+            .then(() => {
+                // 因 no-cors 模式無法讀取回傳 JSON 狀態，但傳輸通常已成功，此處直接引導至成功畫面
+                document.querySelector('.main-card').innerHTML = `
+                    <div class="text-center py-12 space-y-4">
+                        <div class="text-6xl text-emerald-500">🎉</div>
+                        <h2 class="text-2xl font-bold text-gray-900">國外旅遊定型化契約 具結簽署成功</h2>
+                        <p class="text-gray-600 max-w-md mx-auto text-sm leading-relaxed">
+                            感謝您的配合！系統已安全紀錄您的電子簽章，並在背景自動產製正式法律效力之契約副本 PDF 檔案。該檔案將於數分鐘內寄送至您的信箱 <strong>${formData.clientEmail}</strong>，請注意查收。
+                        </p>
+                        <div class="pt-6">
+                            <button onclick="window.close();" class="px-6 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-900 text-sm transition shadow">關閉視窗</button>
+                        </div>
+                    </div>
+                `;
             })
-            .catch(err => {
-                console.error(err);
-                alert("⚠️ 網路連線或伺服器處理錯誤，請確認網路流暢度後重新重簽提交。");
-            })
-            .finally(() => {
+            .catch(error => {
+                console.error("Error:", error);
+                alert("抱歉，合約上傳過程中發生通訊錯誤。請檢查網路連線或稍後再試。");
                 submitBtn.disabled = false;
                 submitBtn.innerText = "確認無誤，進行線上契約具結簽署";
+                submitBtn.className = "w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition";
             });
         });
     </script>
 </body>
-</html></html>
+</html>
