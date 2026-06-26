@@ -6,19 +6,26 @@
   <title>愛玩旅遊 - 線上數位簽署系統</title>
   <style>
     /* ==========================================
-       基礎桌機版樣式
+       基礎全域樣式（徹底消除外圍空白）
        ========================================== */
-    body { 
-      font-family: "Microsoft JhengHei", sans-serif; 
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
       background-color: #f1f5f9; 
-      color: #334155; 
-      margin: 0; 
-      padding: 15px; 
       -webkit-text-size-adjust: 100%; 
       overflow-y: auto; 
     }
+    body { 
+      font-family: "Microsoft JhengHei", sans-serif; 
+      color: #334155; 
+      padding: 15px !important; /* 桌機預留舒適邊距，手機版會自動歸零 */
+      box-sizing: border-box;
+    }
+
+    /* 頂部選擇器容器：寬度極大化，符合現代寬螢幕排版 */
     .selector-container { 
-      max-width: 800px; 
+      max-width: 1200px; /* 從 800px 放大至 1200px，創造更大橫向空間 */
       margin: 0 auto 15px auto; 
       background: #ffffff; 
       padding: 20px; 
@@ -64,21 +71,45 @@
       box-shadow: 0 0 0 3px rgba(2,132,199,0.1); 
     }
     
-    /* 條款內容平鋪容器 */
+    /* ==========================================
+       🎯 條款內容平鋪容器（核心修正：全裝置橫向極致滿版）
+       ========================================== */
     #contentWrapper { 
-      max-width: 800px; 
+      max-width: 1200px; /* 桌機最大寬度放寬至 1200px */
+      width: 100% !important;
       margin: 0 auto; 
       display: none; 
       border: 1px solid #cbd5e1; 
       border-radius: 12px; 
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
       background: #ffffff; 
-      padding: 20px;
+      padding: 30px 24px; /* 桌機版保持舒適的高級感內襯距 */
+      box-sizing: border-box !important;
       height: auto !important; 
       overflow: visible !important; 
     }
 
-    /* 確保消除被 Fetch 進來的子網頁自帶的滾動條與高度限制 */
+    /* 🎯 關鍵修正：將原本鎖在手機版的強制滿版邏輯「部分移出」到全域，
+       全面擊潰子網頁（affidavit.html）可能自帶的任何 container 縮排限制 */
+    #contentWrapper div,
+    #contentWrapper section,
+    #contentWrapper .container, 
+    #contentWrapper .wrapper,
+    #contentWrapper .card,
+    #contentWrapper [class*="container"],
+    #contentWrapper [class*="wrapper"],
+    #contentWrapper [class*="card"],
+    #contentWrapper [class*="content"] {
+      padding-left: 0 !important;  /* 徹底清除子網頁容器的左縮排 */
+      padding-right: 0 !important; /* 徹底清除子網頁容器的右縮排 */
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* 確保被 Fetch 進來的網頁底層宣告不影響外部 */
     #contentWrapper html, 
     #contentWrapper body {
       overflow: visible !important;
@@ -87,30 +118,32 @@
       max-height: unset !important;
       padding: 0 !important;
       margin: 0 !important;
+      width: 100% !important;
       background: transparent !important;
     }
 
+    /* 確保子網頁內部的表格也能完整100%橫向沈展 */
+    #contentWrapper table {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
     /* ==========================================
-       🎯 手機版左右完全歸零，終極極致滿版
+       🎯 針對手機版 / 小螢幕 iframe 的極致優化
        ========================================== */
-    @media (max-width: 600px) { 
+    @media (max-width: 768px) { 
       body { 
         padding: 0 !important;             
-        margin: 0 !important;
         background-color: #ffffff !important; 
-        width: 100% !important;
-        overflow-x: hidden; /* 防止任何子元件不小心溢出產生橫向滾動條 */
       }
       
-      /* 第一步、第二步的選單容器：徹底打平貼死 */
       .selector-container { 
         border-radius: 0px !important;     
         margin: 0 0 10px 0 !important;
-        padding: 15px 12px !important; /* 上下保留舒適距離，左右適度留白讓選單好點擊 */
-        border: none !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        box-shadow: none !important; /* 滿版時拿掉陰影更乾淨 */
+        padding: 12px 10px !important; 
+        border-left: none !important;
+        border-right: none !important;
       }
       
       .grid-select { 
@@ -118,40 +151,26 @@
         gap: 12px; 
       }  
       
-      /* 下方內嵌條款文件容器：徹底打平 */
+      /* 手機或小 iframe 下，主容器邊框與圓角完全切齊螢幕，騰出最大文字空間 */
       #contentWrapper { 
         border-radius: 0px !important;     
         border: none !important;           
         box-shadow: none !important;       
-        padding: 0px !important; /* 主容器內襯完全歸 0 */          
+        padding: 12px 8px !important; /* 僅保留左右 8px，讓文字幾乎貼邊但保持極高易讀性 */
         margin: 0 !important;
-        width: 100% !important;            
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-      }
-      
-      /* 🎯 關鍵修正：強行破除子網頁帶進來的所有外層包覆區塊的外距(Margin)與內襯(Padding) */
-      #contentWrapper html,
-      #contentWrapper body,
-      #contentWrapper div,
-      #contentWrapper section,
-      #contentWrapper .container, 
-      #contentWrapper .wrapper,
-      #contentWrapper .card,
-      #contentWrapper [class*="container"],
-      #contentWrapper [class*="wrapper"],
-      #contentWrapper [class*="card"],
-      #contentWrapper [class*="content"] {
-        padding: 0px !important;   /* 左右內襯直接強制歸 0，消除白邊 */
-        margin: 0px !important;    /* 消除所有卡片自帶的外距 */
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        border-radius: 0px !important;     
-        border: none !important;
       }
 
-      /* 🎯 為了避免文字直接貼死螢幕玻璃，只針對純文字標籤與表格內部給予微幅的左右內襯 */
+      /* 移除所有底層區塊的圓角，避免手機畫面產生視覺碎裂 */
+      #contentWrapper div,
+      #contentWrapper section,
+      #contentWrapper .container,
+      #contentWrapper [class*="container"] {
+        border-radius: 0px !important;     
+        border-left: none !important;      
+        border-right: none !important;
+      }
+
+      /* 防止文字與手機螢幕邊緣或外圍滾動條完全黏死，給予完美微調 */
       #contentWrapper p,
       #contentWrapper span,
       #contentWrapper h1,
@@ -160,34 +179,18 @@
       #contentWrapper h4,
       #contentWrapper li,
       #contentWrapper .text-block {
-        padding-left: 14px !important;     
-        padding-right: 14px !important;
-        margin-top: 8px !important;
-        margin-bottom: 8px !important;
-        box-sizing: border-box !important;
-      }
-
-      /* 確保子網頁內部的表格、合約條款區塊也能完整橫向伸展 */
-      #contentWrapper table {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 10px 0 !important;
-        box-sizing: border-box !important;
+        padding-left: 4px !important;     
+        padding-right: 4px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
       
-      #contentWrapper td,
-      #contentWrapper th {
-        padding: 8px !important; /* 表格內部格線留點空間比較好閱讀 */
-      }
-      
-      /* 手機版 Canvas 簽名畫布強制擴大，左右留下一點點安全簽名邊距 */
+      /* 手機版 Canvas 簽名畫布強制擴大 */
       #contentWrapper canvas,
       #contentWrapper #sigCanvas,
       #contentWrapper [id*="Canvas"],
       #contentWrapper [class*="canvas"] {
-        width: calc(100% - 20px) !important;
-        margin: 10px auto !important;
-        display: block !important;
+        width: 100% !important;
         height: 280px !important;          
       }
     }
@@ -316,19 +319,14 @@
         document.getElementById('loadingOverlay').style.display = "none";
         contentWrapper.style.display = "block";
         
-        // 先放入 HTML 結構
         contentWrapper.innerHTML = htmlText;
 
-        // 🎯 關鍵連動修正：建立模擬的 URL 參數字串
-        const mockQueryString = `?tourId=${encodeURIComponent(selectedTourDetails.tourId)}&tourName=${encodeURIComponent(selectedTourDetails.tourName)}&tourDate=${encodeURIComponent(selectedTourDetails.tourDate)}`;
-        
         window.urlParams = {
           tourId: selectedTourDetails.tourId,
           tourName: selectedTourDetails.tourName,
           tourDate: selectedTourDetails.tourDate
         };
 
-        // 解析並執行子網頁腳本
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
         const scripts = doc.querySelectorAll('script');
@@ -339,72 +337,58 @@
             newScript.src = oldScript.src;
           } else {
             let code = oldScript.textContent;
-            
-            // 🎯 核心修正 1：完美替換 window.location.search，讓子網頁原有的 URLSearchParams 邏輯能直接取到資料
-            code = code.replace(/window\.location\.search/g, `"${mockQueryString}"`);
-            
-            // 🎯 核心修正 2：移除或替換原本會出錯的 $(document).ready，改成直接執行的封閉區塊防止全域污染
-            code = code.replace(/window\.addEventListener\s*\(\s*['"]DOMContentLoaded['"]\s*,\s*function\s*\(\s*\)\s*\{/g, '{');
-            code = code.replace(/window\.addEventListener\s*\(\s*['"]DOMContentLoaded['"]\s*,\s*\(\s*\)\s*=>\s*\{/g, '{');
-            
+            code = code.replace(/window\.addEventListener\s*\(\s*['"]DOMContentLoaded['"]\s*,/g, '$(document).ready(');
             newScript.textContent = code;
           }
-          // 🎯 核心修正 3：將腳本加入到 contentWrapper 內，這樣更換文件時才會被一併清空
-          contentWrapper.appendChild(newScript);
+          document.body.appendChild(newScript);
         });
 
-        // 🎯 核心修正 4：子網頁載入後，強制觸發資料填充邏輯
-        if (typeof injectTourDataToFields === "function") {
-          injectTourDataToFields(selectedTourDetails);
+        if (typeof (injectTourDataToFields) === "function") {
+             injectTourDataToFields(selectedTourDetails);
         } else {
-          // 備用機制：適度拉長延遲至 300ms 確保 DOM 完全生成
-          setTimeout(() => {
-            if(document.getElementById('tourId')) document.getElementById('tourId').value = selectedTourDetails.tourId || '';
-            if(document.getElementById('display-tourId')) document.getElementById('display-tourId').innerText = selectedTourDetails.tourId || '--';
-            if(document.getElementById('display-tourDate')) document.getElementById('display-tourDate').innerText = selectedTourDetails.tourDate || '--';
-            if(document.getElementById('display-tourName')) document.getElementById('display-tourName').innerText = selectedTourDetails.tourName || '--';
-            if(document.getElementById('field-tourName')) document.getElementById('field-tourName').innerText = selectedTourDetails.tourName || '--';
-            if(document.getElementById('field-tourDestination')) document.getElementById('field-tourDestination').innerText = selectedTourDetails.tourDestination || '--';
-            if(document.getElementById('field-tourAssembleTime')) document.getElementById('field-tourAssembleTime').innerText = selectedTourDetails.tourAssembleTime || '--';
-            if(document.getElementById('field-tourAssemblePlace')) document.getElementById('field-tourAssemblePlace').innerText = selectedTourDetails.tourAssemblePlace || '--';
-            if(document.getElementById('field-tourFeeText')) document.getElementById('field-tourFeeText').innerText = selectedTourDetails.tourFeeText || '--';
-            if(document.getElementById('field-paymentAmount1')) document.getElementById('field-paymentAmount1').innerText = selectedTourDetails.paymentAmount1 || '--';
-            if(document.getElementById('field-minTourPeople')) document.getElementById('field-minTourPeople').innerText = selectedTourDetails.minTourPeople || '--';
-            
-            // 處理行程表連結
-            const itineraryLink = document.getElementById('itinerary-link');
-            const itineraryText = document.getElementById('itinerary-tourName-text');
-            if (itineraryLink && itineraryText) {
-                if(selectedTourDetails.tourItineraryTable && selectedTourDetails.tourItineraryTable.startsWith('http')) {
-                    let pdfUrl = selectedTourDetails.tourItineraryTable.trim();
-                    if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
-                        pdfUrl = pdfUrl.split('/view')[0] + '/preview';
+            setTimeout(() => {
+                if(document.getElementById('tourId')) document.getElementById('tourId').value = selectedTourDetails.tourId || '';
+                if(document.getElementById('display-tourId')) document.getElementById('display-tourId').innerText = selectedTourDetails.tourId || '--';
+                if(document.getElementById('display-tourDate')) document.getElementById('display-tourDate').innerText = selectedTourDetails.tourDate || '--';
+                if(document.getElementById('display-tourName')) document.getElementById('display-tourName').innerText = selectedTourDetails.tourName || '--';
+                if(document.getElementById('field-tourName')) document.getElementById('field-tourName').innerText = selectedTourDetails.tourName || '--';
+                if(document.getElementById('field-tourDestination')) document.getElementById('field-tourDestination').innerText = selectedTourDetails.tourDestination || '--';
+                if(document.getElementById('field-tourAssembleTime')) document.getElementById('field-tourAssembleTime').innerText = selectedTourDetails.tourAssembleTime || '--';
+                if(document.getElementById('field-tourAssemblePlace')) document.getElementById('field-tourAssemblePlace').innerText = selectedTourDetails.tourAssemblePlace || '--';
+                if(document.getElementById('field-tourFeeText')) document.getElementById('field-tourFeeText').innerText = selectedTourDetails.tourFeeText || '--';
+                if(document.getElementById('field-paymentAmount1')) document.getElementById('field-paymentAmount1').innerText = selectedTourDetails.paymentAmount1 || '--';
+                if(document.getElementById('field-minTourPeople')) document.getElementById('field-minTourPeople').innerText = selectedTourDetails.minTourPeople || '--';
+                
+                const itineraryLink = document.getElementById('itinerary-link');
+                const itineraryText = document.getElementById('itinerary-tourName-text');
+                if (itineraryLink && itineraryText) {
+                    if(selectedTourDetails.tourItineraryTable && selectedTourDetails.tourItineraryTable.startsWith('http')) {
+                        let pdfUrl = selectedTourDetails.tourItineraryTable.trim();
+                        if (pdfUrl.includes('drive.google.com') && pdfUrl.includes('/view')) {
+                            pdfUrl = pdfUrl.split('/view')[0] + '/preview';
+                        }
+                        itineraryLink.href = pdfUrl;
+                        itineraryLink.target = "_blank";
+                        itineraryText.innerText = `點此線上檢閱：${selectedTourDetails.tourName || '本團'} - 官方行程表檔案`;
+                    } else if (selectedTourDetails.tourItineraryTable) {
+                        itineraryLink.removeAttribute('href');
+                        itineraryText.innerText = selectedTourDetails.tourItineraryTable;
                     }
-                    itineraryLink.href = pdfUrl;
-                    itineraryLink.target = "_blank";
-                    itineraryText.innerText = `點此線上檢閱：${selectedTourDetails.tourName || '本團'} - 官方行程表檔案`;
-                } else if (selectedTourDetails.tourItineraryTable) {
-                    itineraryLink.removeAttribute('href');
-                    itineraryText.innerText = selectedTourDetails.tourItineraryTable;
                 }
-            }
-            
-            // 隱藏子網頁內建的獨立載入提示
-            const subLoading = document.getElementById('loading-status');
-            if(subLoading) subLoading.style.display = 'none';
-          }, 300);
+                
+                const subLoading = document.getElementById('loading-status');
+                if(subLoading) subLoading.style.display = 'none';
+            }, 100);
         }
 
         contentWrapper.scrollIntoView({ behavior: 'smooth' });
       })
       .catch(err => {
         document.getElementById('loadingOverlay').style.display = "none";
-        console.error(err);
         alert("載入條款文件失敗，請確認檔案是否存在。");
       });
   }
 </script>
 
 </body>
-</html>
 </html>
