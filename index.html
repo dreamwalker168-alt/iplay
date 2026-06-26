@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-color=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>愛玩旅遊 - 線上數位簽署系統</title>
   <style>
     /* ==========================================
@@ -15,7 +15,7 @@
       margin: 0; 
       padding: 15px; 
       -webkit-text-size-adjust: 100%; 
-      overflow-y: auto; /* 確保全網頁只有最外層這一個主捲軸 */
+      overflow-y: auto; 
     }
     .selector-container { 
       max-width: 800px; 
@@ -78,7 +78,7 @@
       overflow: visible !important; 
     }
 
-    /* 終極覆蓋：強制消除被 Fetch 進來的子網頁自帶的滾動條與高度限制 */
+    /* 確保消除被 Fetch 進來的子網頁自帶的滾動條與高度限制 */
     #contentWrapper html, 
     #contentWrapper body {
       overflow: visible !important;
@@ -89,25 +89,18 @@
       margin: 0 !important;
       background: transparent !important;
     }
-    #contentWrapper .container, 
-    #contentWrapper .wrapper,
-    #contentWrapper [class*="container"],
-    #contentWrapper [class*="wrapper"] {
-      height: auto !important;
-      overflow: visible !important;
-    }
 
     /* ==========================================
-       🎯 終極優化：手機版 (螢幕小於 600px) 左右空白歸零
+       🎯 終極優化：手機版左右全部貼邊，間隔縮到最小
        ========================================== */
     @media (max-width: 600px) { 
       body { 
-        padding: 0 !important;             /* 1. 徹底拔除網頁最外圈的灰色大死白邊 */
-        background-color: #ffffff !important; /* 2. 背景改為全白，讓條文與外殼視覺一體化 */
+        padding: 0 !important;             
+        background-color: #ffffff !important; 
       }
       
       .selector-container { 
-        border-radius: 0px !important;     /* 3. 選單取消圓角，直接貼邊填滿手機寬度 */
+        border-radius: 0px !important;     
         margin: 0 0 10px 0 !important;
         padding: 12px 10px !important; 
         border-left: none !important;
@@ -119,34 +112,47 @@
         gap: 12px; 
       }  
       
-      /* 4. 徹底解放條文容器，消除左右外距與外框，橫向 100% 撐滿 */
+      /* 解放第一層白底容器，消除外框 */
       #contentWrapper { 
-        border-radius: 0px !important;     /* 拿掉圓角 */
-        border-left: none !important;      /* 拿掉左右邊框，擠出所有寬度 */
-        border-right: none !important;
-        box-shadow: none !important;       /* 拿掉陰影 */
-        padding: 10px 8px !important;      /* 5. 內部襯距縮到最小(左右各留8px防貼字即可) */
+        border-radius: 0px !important;     
+        border: none !important;           
+        box-shadow: none !important;       
+        padding: 0px !important;           /* 🎯 這裡改為 0：徹底拿掉第一層白底的大邊框空隙 */
         margin: 0 !important;
-        width: 100% !important;            /* 強制滿版 */
+        width: 100% !important;            
       }
       
-      /* 6. 確保被載入進來的子網頁內部寬度與襯距同步歸零貼邊 */
+      /* 🎯 關鍵重砲：強制將子網頁內，真正放文字、有底色的那個「第二層內置容器」內襯與外距逼近歸零 */
+      #contentWrapper .container, 
+      #contentWrapper .wrapper,
+      #contentWrapper .card,
+      #contentWrapper [class*="container"],
+      #contentWrapper [class*="wrapper"],
+      #contentWrapper [class*="card"],
+      #contentWrapper [class*="content"] {
+        padding: 10px 6px !important;      /* 🎯 只留 6px 讓字不要黏到手機螢幕邊緣，其餘空間全釋放 */
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        border-radius: 4px !important;    /* 微調帶底色區塊的圓角，使其符合滿版美觀 */
+      }
+      
+      /* 確保子網頁內部寬度與襯距同步貼邊 */
       #contentWrapper html, 
-      #contentWrapper body,
-      #contentWrapper .container,
-      #contentWrapper [class*="page-inside"] {
+      #contentWrapper body {
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
       }
       
-      /* 7. 針對手機版 Canvas 簽名畫布強制擴大至完美高度 */
+      /* 手機版 Canvas 簽名畫布強制擴大 */
       #contentWrapper canvas,
       #contentWrapper #sigCanvas,
       #contentWrapper [id*="Canvas"],
       #contentWrapper [class*="canvas"] {
         width: 100% !important;
-        height: 320px !important;          /* 釋放高度，大拇指極佳書寫空間 */
+        height: 320px !important;          
       }
     }
 
@@ -265,7 +271,6 @@
 
     document.getElementById('loadingOverlay').style.display = "block";
 
-    // 1. 動態讀取 HTML 檔案文字
     fetch(targetHtmlFile)
       .then(response => {
         if(!response.ok) throw new Error("找不到網頁檔案");
@@ -275,10 +280,8 @@
         document.getElementById('loadingOverlay').style.display = "none";
         contentWrapper.style.display = "block";
         
-        // 2. 將 HTML 內文塞入容器
         contentWrapper.innerHTML = htmlText;
 
-        // 3. 解析並動態執行子網頁裡的 JavaScript
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
         const scripts = doc.querySelectorAll('script');
@@ -293,14 +296,20 @@
           document.body.appendChild(newScript);
         });
 
-        // 4. 動態注入網址參數
         window.urlParams = {
           tourId: selectedTourDetails.tourId,
           tourName: selectedTourDetails.tourName,
           tourDate: selectedTourDetails.tourDate
         };
 
-        // 5. 畫面流暢滾動至條款起點
         contentWrapper.scrollIntoView({ behavior: 'smooth' });
       })
-      .catch(err
+      .catch(err => {
+        document.getElementById('loadingOverlay').style.display = "none";
+        alert("載入條款文件失敗，請確認檔案是否存在。");
+      });
+  }
+</script>
+
+</body>
+</html>
