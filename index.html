@@ -91,7 +91,7 @@
     }
 
     /* ==========================================
-       🎯 終極優化：手機版左右全部貼邊，間隔縮到最小
+       🎯 終極優化：手機版左右完全貼邊，間隔縮到最小
        ========================================== */
     @media (max-width: 600px) { 
       body { 
@@ -112,17 +112,19 @@
         gap: 12px; 
       }  
       
-      /* 解放第一層白底容器，消除外框 */
+      /* 徹底打碎外層白底容器的任何間距 */
       #contentWrapper { 
         border-radius: 0px !important;     
         border: none !important;           
         box-shadow: none !important;       
-        padding: 0px !important;           /* 🎯 這裡改為 0：徹底拿掉第一層白底的大邊框空隙 */
+        padding: 0px !important;           /* 歸零：消滅第一層白底大框空隙 */
         margin: 0 !important;
         width: 100% !important;            
       }
       
-      /* 🎯 關鍵重砲：強制將子網頁內，真正放文字、有底色的那個「第二層內置容器」內襯與外距逼近歸零 */
+      /* 🎯 解決痛點 1 & 2：將子網頁內部的所有外殼、灰色卡片區塊完全強制滿版 */
+      #contentWrapper div,
+      #contentWrapper section,
       #contentWrapper .container, 
       #contentWrapper .wrapper,
       #contentWrapper .card,
@@ -130,12 +132,23 @@
       #contentWrapper [class*="wrapper"],
       #contentWrapper [class*="card"],
       #contentWrapper [class*="content"] {
-        padding: 10px 6px !important;      /* 🎯 只留 6px 讓字不要黏到手機螢幕邊緣，其餘空間全釋放 */
-        margin: 0 !important;
+        padding: 10px 8px !important;      /* 🎯 左右只留 8px，釋放所有卡片內部的文字空間 */
+        margin: 8px 0 !important;          /* 🎯 上下保留間距，左右外距歸零貼邊 */
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        border-radius: 4px !important;    /* 微調帶底色區塊的圓角，使其符合滿版美觀 */
+        border-radius: 0px !important;     /* 手機版卡片取消圓角，使其完美貼邊延伸 */
+        border-left: none !important;      /* 拿掉左右邊框，爭取極致寬度 */
+        border-right: none !important;
+      }
+
+      /* 確保子網頁內部的段落、表格、文字標籤也能完整伸展 */
+      #contentWrapper p,
+      #contentWrapper table,
+      #contentWrapper td,
+      #contentWrapper span {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
       
       /* 確保子網頁內部寬度與襯距同步貼邊 */
